@@ -1,0 +1,281 @@
+{
+ "Resources": {
+  "Demographqlapi051BF696": {
+   "Type": "AWS::AppSync::GraphQLApi",
+   "Properties": {
+    "AuthenticationType": "API_KEY",
+    "Name": "Demographql-api"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DemoStack/Democonfig-stack/Demographql-api/Resource"
+   }
+  },
+  "DemographqlapiSchemaCBA7AE18": {
+   "Type": "AWS::AppSync::GraphQLSchema",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "Demographqlapi051BF696",
+      "ApiId"
+     ]
+    },
+    "Definition": "\nenum TodoStatusEnum {\n  New\n  Active\n  Complete\n  Deleted\n}\n\ntype TodoTask {\n  id: String\n  completedDate: AWSDateTime\n  status: TodoStatusEnum\n}\n\ninput ModelStringInput {\n  ne: String\n  eq: String\n  le: String\n  lt: String\n  ge: String\n  gt: String\n  contains: String\n  notContains: String\n  between: [String]\n  beginsWith: String\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n  size: ModelSizeInput\n}\n\ninput ModelIntInput {\n  ne: Int\n  eq: Int\n  le: Int\n  lt: Int\n  ge: Int\n  gt: Int\n  between: [Int]\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n}\n\ninput ModelFloatInput {\n  ne: Float\n  eq: Float\n  le: Float\n  lt: Float\n  ge: Float\n  gt: Float\n  between: [Float]\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n}\n\ninput ModelBooleanInput {\n  ne: Boolean\n  eq: Boolean\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n}\n\ninput ModelIDInput {\n  ne: ID\n  eq: ID\n  le: ID\n  lt: ID\n  ge: ID\n  gt: ID\n  contains: ID\n  notContains: ID\n  between: [ID]\n  beginsWith: ID\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n  size: ModelSizeInput\n}\n\ninput ModelSubscriptionStringInput {\n  ne: String\n  eq: String\n  le: String\n  lt: String\n  ge: String\n  gt: String\n  contains: String\n  notContains: String\n  between: [String]\n  beginsWith: String\n  in: [String]\n  notIn: [String]\n}\n\ninput ModelSubscriptionIntInput {\n  ne: Int\n  eq: Int\n  le: Int\n  lt: Int\n  ge: Int\n  gt: Int\n  between: [Int]\n  in: [Int]\n  notIn: [Int]\n}\n\ninput ModelSubscriptionFloatInput {\n  ne: Float\n  eq: Float\n  le: Float\n  lt: Float\n  ge: Float\n  gt: Float\n  between: [Float]\n  in: [Float]\n  notIn: [Float]\n}\n\ninput ModelSubscriptionBooleanInput {\n  ne: Boolean\n  eq: Boolean\n}\n\ninput ModelSubscriptionIDInput {\n  ne: ID\n  eq: ID\n  le: ID\n  lt: ID\n  ge: ID\n  gt: ID\n  contains: ID\n  notContains: ID\n  between: [ID]\n  beginsWith: ID\n  in: [ID]\n  notIn: [ID]\n}\n\nenum ModelAttributeTypes {\n  binary\n  binarySet\n  bool\n  list\n  map\n  number\n  numberSet\n  string\n  stringSet\n  _null\n}\n\ninput ModelSizeInput {\n  ne: Int\n  eq: Int\n  le: Int\n  lt: Int\n  ge: Int\n  gt: Int\n  between: [Int]\n}\n\nenum ModelSortDirection {\n  ASC\n  DESC\n}\n\n"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DemoStack/Democonfig-stack/Demographql-api/Schema"
+   }
+  },
+  "DemographqlapiDefaultApiKey839DF71F": {
+   "Type": "AWS::AppSync::ApiKey",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "Demographqlapi051BF696",
+      "ApiId"
+     ]
+    },
+    "Description": "Default API key.",
+    "Expires": 1691705615
+   },
+   "DependsOn": [
+    "DemographqlapiSchemaCBA7AE18"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "DemoStack/Democonfig-stack/Demographql-api/DefaultApiKey"
+   }
+  },
+  "DemographqlapiNONEA31D73AB": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "Demographqlapi051BF696",
+      "ApiId"
+     ]
+    },
+    "Name": "NONE",
+    "Type": "NONE"
+   },
+   "Metadata": {
+    "aws:cdk:path": "DemoStack/Democonfig-stack/Demographql-api/NONE/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/01PSw6CMBQ8i3soKEa3GkxcaDDCAcyzfYbyaSttNaTh7lIk0dX8FjOzIi7ZkngBbx1SVocNvxOXoTbICgO0DsbgBkrpXlDi0oc4dqDK63mvePBTBS2xBW+M/gl7zw5goJC2ozh4ebFGWeNZjnqyPU+lYNxwKYYg2ZA4hEaVMM7ZzXsij3P9HLqp89n4BZkU+NczBEIyJJWOXss1WfpfleY87KwwvEWSf/EDqrht1PQAAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "DemoStack/Democonfig-stack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "DemographqlUrl": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Demographqlapi051BF696",
+     "GraphQLUrl"
+    ]
+   },
+   "Export": {
+    "Name": "DemographqlUrl"
+   }
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-2"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

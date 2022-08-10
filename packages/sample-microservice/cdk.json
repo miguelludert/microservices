@@ -1,0 +1,9 @@
+{
+    "app": "npx ts-node -r tsconfig-paths/register --prefer-ts-exts src/index.ts",
+    "context": {
+      "aws-cdk-lib/aws_ecr-assets:dockerIgnoreSupport": true,
+      "aws-cdk-lib/aws_secretsmanager:parseOwnedSecretName": true,
+      "aws-cdk-lib/aws_kms:defaultKeyPolicies": true,
+      "aws-cdk-lib/aws_s3:grantWriteWithoutAcl": true
+    }
+  }

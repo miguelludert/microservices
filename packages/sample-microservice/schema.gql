@@ -1,0 +1,24 @@
+enum TodoStatusEnum  {
+    New,
+    Active,
+    Complete,
+    Deleted
+}
+
+type TodoTask @model @aws_api_key {
+    id: String
+    completedDate: AWSDateTime
+    status: TodoStatusEnum
+}
+
+# Mutation {
+#       shareTask(
+#         id: String!
+#         emailAddress: String!
+#     ): [UploadMediaResult]
+#         @function(name: "media-function")
+#         @aws_api_key
+# }
+
+#authentication
+#notififcations+subscriptions

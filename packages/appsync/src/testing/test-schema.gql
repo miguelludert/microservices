@@ -1,0 +1,30 @@
+type Blog @model @key(fields: ["blogId"]) {
+	blogId: String!
+	name: String!
+}
+type BlogPost @model @key(fields: ["blogId", "blogPostId"]) {
+	blogId: String!
+	blogPostId: String!
+	title: String!
+	body: String!
+}
+type Comment
+	@model
+	@key(fields: ["blogPostId", "commentId"])
+	@key(name: "byPublishDate", fields: ["publishDate"]) {
+	blogPostId: String!
+	commentId: String!
+	body: String!
+	publishDate: Int!
+}
+type TagCloud {
+	size: Int!
+	tag: String!
+}
+
+type Query {
+	helloWorld(blogId: String!): String @function(name: "${env}-hello-world")
+}
+type Mutation {
+	goodByeWorld(blogId: String!): String @function(name: "${env}-good-bye-world")
+}

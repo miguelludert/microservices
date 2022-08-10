@@ -5,7 +5,19 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "tslib": "^2.3.0"
+    "@aws-amplify/graphql-auth-transformer": "^0.12.4",
+    "@aws-amplify/graphql-function-transformer": "^0.7.25",
+    "@aws-amplify/graphql-index-transformer": "^0.13.4",
+    "@aws-amplify/graphql-model-transformer": "^0.15.4",
+    "@aws-amplify/graphql-transformer-core": "^0.17.9",
+    "@aws-cdk/aws-appsync-alpha": "^2.36.0-alpha.0",
+    "aws-cdk-lib": "^2.37.0",
+    "change-case": "^4.1.2",
+    "constructs": "^10.1.71",
+    "esbuild": "^0.14.54",
+    "fnts": "^1.5.1",
+    "tslib": "^2.3.0",
+    "amplify-prompts": "^2.2.0"
   },
   "devDependencies": {
     "@nrwl/cli": "14.5.2",
@@ -16,7 +28,7 @@
     "@nrwl/nx-cloud": "latest",
     "@nrwl/workspace": "14.5.2",
     "@types/jest": "27.4.1",
-    "@types/node": "16.11.7",
+    "@types/node": "^18.6.5",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint": "~8.15.0",

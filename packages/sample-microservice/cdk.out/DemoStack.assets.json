@@ -1,0 +1,32 @@
+{
+  "version": "20.0.0",
+  "files": {
+    "ee954b79839508a9812adf10eff52be9f0f401d86ca524b70b73ffa4d88cef01": {
+      "source": {
+        "path": "DemoStackDemoconfigstackD4EF7F0E.nested.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "ee954b79839508a9812adf10eff52be9f0f401d86ca524b70b73ffa4d88cef01.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "a63a20cf498f36512571e136990d0cab070d10f529942279faea88ace00e00d7": {
+      "source": {
+        "path": "DemoStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "a63a20cf498f36512571e136990d0cab070d10f529942279faea88ace00e00d7.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

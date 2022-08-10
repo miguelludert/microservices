@@ -11,7 +11,7 @@
     "target": "es2015",
     "module": "esnext",
     "lib": [
-      "es2017",
+      "es2019",
       "dom"
     ],
     "skipLibCheck": true,
@@ -24,7 +24,10 @@
       "@miguelludert/sample-microservice": [
         "packages/sample-microservice/src/index.ts"
       ]
-    }
+    },
+    "types": [
+      "node"
+    ]
   },
   "exclude": [
     "node_modules",
