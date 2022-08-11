@@ -2,7 +2,7 @@
 import { Construct } from 'constructs';
 import { NestedStack, aws_iam } from 'aws-cdk-lib';
 import * as aws_appsync from '@aws-cdk/aws-appsync-alpha';
-import { readFileSync, writeFileSync } from 'fs';
+import { mkdir, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import {
   GraphQLTransform,
   TransformerPluginBase,
@@ -139,13 +139,9 @@ export class AppsyncSchemaTransformer extends NestedStack {
       },
     ]);
     this.addResources(createDynamoDataSource(this, this.props, this.api, this.cfn));
-    console.info(2);
     this.addResources(createLambdaDataSource(this, this.props, this.api, this.cfn));
-    console.info(3);
     this.addResources(createFuntionConfigurations(this));
-    console.info(4);
     this.addResources(createResolvers(this));
-    console.info(5);
     this.addResources(subscriptions?.map((name) => createSubscription(this, name)));
     console.info(6);
     // add custom domain name
@@ -188,6 +184,9 @@ export function writeOutputFiles(
 ) {
   // output as soon as schemas are available for debugging
   if (props.outputDirectory) {
+    mkdirSync(props.outputDirectory, {
+      recursive : true
+    });
     writeFileSync(
       join(
         props.outputDirectory,

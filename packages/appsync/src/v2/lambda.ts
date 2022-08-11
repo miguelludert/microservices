@@ -9,14 +9,21 @@ import {
   AmplifyGeneratedCfnResource,
   AwsDataSourceType,
   AppsyncResourceType,
-  LambdaProps,
+  DefultFunctionProps
 } from '../datatypes';
-import { paramCase } from 'change-case';
+import { paramCase, pascalCase } from 'change-case';
 import { join } from 'path';
 import * as esbuild from 'esbuild';
 import { existsSync, mkdir, mkdirSync } from 'fs';
+import { Function, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { ifError } from 'assert';
 
 // TODO: this is a strong candidate for migration to new transformer
+
+export const defaultFunctionProps : DefultFunctionProps = {
+  runtime : Runtime.NODEJS_16_X,
+  handler : "handler"
+};
 
 export const createLambdaDataSource = (
   scope: Construct,
@@ -42,50 +49,47 @@ export const createLambdaDataSource = (
   return result as AppsyncResource[];
 };
 
-export function createLambdaFunctionProps(props: AppsyncSchemaTransformerProps, functionName : string) {
-  let result;
-  if (!props.defaultFunctionProps) {
-    throw new Error('Prop `defaultLambdaProps` not set.');
+export function createLambdaFunction(scope : Construct, props: AppsyncSchemaTransformerProps, functionName : string) : Function {
+
+  // functionName comes in as a pascalCase obj from cfn
+  const functionPropKey = Object
+    .keys(props.functionProps)
+    .find(f => pascalCase(f) === functionName);
+
+  if(!functionPropKey) {
+    throw new Error(`Cannot find stack by name of '${functionName}'.`)
   }
 
-  const formattedFunctionName = paramCase(functionName);
-  const explicitProps = props.functionProps?.[formattedFunctionName];
-  if(explicitProps && typeof explicitProps !== "string") {
-    result = explicitProps;
-  } 
-  if(typeof(props.defaultFunctionProps) === "function") {
-    throw new Error("functionSetup: LambdaFunctionCallback not implemented")
-  } else {
+  const functionOrEntryPoint = props.functionProps[functionPropKey];
+
+  if(typeof(functionOrEntryPoint) === "string") {
+    const defaultProps = {
+      ...defaultFunctionProps,
+      ...props.defaultFunctionProps,
+    };
     const  {
-      initialPolicies,
-      codeDir,
-      handlerName,
       runtime,
       environment,
-      timeoutInSeconds
-    } = props.defaultFunctionProps as LambdaProps;
-    result  = Object.assign({}, result, {
-      functionName : props.namingConvention(functionName),
-      handler: handlerName || "index.handler",
-      runtime: runtime || aws_lambda.Runtime.NODEJS_14_X,
-      timeout: Duration.seconds(timeoutInSeconds || 3),
-      environment,
-      initialPolicy : initialPolicies
-    }, result);
-    if(!result.code) {
-      let entryPoint;
-      if(explicitProps && typeof explicitProps === "string") {
-        entryPoint = explicitProps as string;
-      } else {
-        if(!codeDir) {
-          throw new Error(`createLambdaFunctionProps: Props 'defaultFunctionProps.codeDir' or 'functionProps.${formattedFunctionName}' are required.`);
-        }
-        entryPoint = join(codeDir, formattedFunctionName, 'index.ts');
-      }
-      result.code = buildFunctionCode(entryPoint, join(props.outputDirectory, formattedFunctionName));
-    }      
+      handler,
+      esbuildProps,
+      ...restProps
+    } = defaultProps;
+
+    console.info("sdfsadf: " +  props.outputDirectory);
+    if(!props.outputDirectory) { 
+      throw new Error(`'props.outputDirectory' is required when creating lambda functions.`)
+    }
+
+    const code = buildFunctionCode(functionOrEntryPoint, join(props.outputDirectory, functionPropKey));
+    return new aws_lambda.Function(scope, props.namingConvention(functionName), {
+      code,
+      runtime,
+      handler : `index.${handler}`,
+      ...restProps
+    });
+  } else {
+    return functionOrEntryPoint;    
   }
-  return result;
 }
 
 export const createLambdaResources = (
@@ -96,8 +100,7 @@ export const createLambdaResources = (
 ): AppsyncResource[] => {
   const datasourceName = cfn.Properties.Name;
   const functionName = datasourceName.replace('LambdaDataSource', '');
-  const lambdaProps = createLambdaFunctionProps(props, functionName);
-  const lambdaFunction = new aws_lambda.Function(scope, props.namingConvention(functionName), lambdaProps);
+  const lambdaFunction = createLambdaFunction(scope, props, functionName);
   const datasource = new aws_appsync.LambdaDataSource(
     scope,
     props.namingConvention(datasourceName),
@@ -128,7 +131,6 @@ export function buildFunctionCode(entryPoint : string, outDir : string){
     throw new Error(`buildFunctionCode: Cannot find function code. '${entryPoint}'`);
   }
   
-  // TODO: if NX use nx commands
   esbuild.buildSync({
     entryPoints : [entryPoint],
     bundle : true,

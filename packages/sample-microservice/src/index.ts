@@ -15,10 +15,13 @@ class AppsyncStack extends Stack
         super(scope,name);
         new AppsyncSchemaTransformer(this, namingConvention(`appsync`), {
             gqlSchemaPath : join(__dirname,'../schema.gql'),
-            namingConvention
+            namingConvention,
+            outputDirectory : join(__dirname,'../dist'),
+            functionProps : {
+                "share-task"  : join(__dirname, 'functions/share-task/index.ts') // by entry point file path
+            }
         });
     }
-}
+}   
 
 new AppsyncStack(app, namingConvention('Stack'));
-// appsync stack

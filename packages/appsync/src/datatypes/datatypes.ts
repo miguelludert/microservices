@@ -1,6 +1,7 @@
 import { Construct } from 'constructs';
 import { aws_cognito, aws_lambda, aws_iam } from 'aws-cdk-lib';
 import { AwsResourceType } from './cfn';
+import { FunctionOptions } from 'aws-cdk-lib/aws-lambda';
 
 export const NO_SCHEMA_ERROR_MESSAGE =
   "Either 'schemaText' or a 'schemaFile' property is required.";
@@ -38,33 +39,18 @@ export interface AppsyncSchemaTransformerProps {
   outputDirectory?: string;
   namingConvention: (name: string) => string;
   baseName?: string;
-  defaultFunctionProps?: LambdaProps | LambdaFunctionCallback;
-  functionProps? : Record<string, aws_lambda.FunctionProps | string>;
+  defaultFunctionProps?: DefultFunctionProps;
+  functionProps? : Record<string, aws_lambda.Function | string>;
   subscriptions?: string[];
   customDomainName? : DomainConfig;
   apiKeyRotator? : boolean;
 }
 
-export interface LambdaProps {
-  codeDir?: string;
-  handlerName?: string;
-  environment?: {
-    [key: string]: string;
-  };
-  initialPolicies?: aws_iam.PolicyStatement[];
+export interface DefultFunctionProps extends FunctionOptions {
   runtime?: aws_lambda.Runtime;
-  memorySize?: number;
-  timeoutInSeconds?: number;
+  handler?: string;
   esbuildProps? : any;
-  // vpc
-  // securityGroups
-  // timeout
-  // vpcSubnets
-  // role
 }
-
-export type LambdaFunctionCallback = () => aws_lambda.FunctionProps;
-
 
 export enum AppsyncResourceType {
   DYNAMO_DATASOURCE,
@@ -79,7 +65,7 @@ export enum AppsyncResourceType {
   DYNAMO_TABLE,
   LAMBDA_FUNCTION,
   API_KEY_ROTATOR,
-  CUSTOME_DOMAIN,
+  CUSTOM_DOMAIN,
 }
 
 export interface AppsyncResource {

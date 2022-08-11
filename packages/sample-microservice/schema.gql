@@ -6,19 +6,32 @@ enum TodoStatusEnum  {
 }
 
 type TodoTask @model @aws_api_key {
-    id: String
+    id: ID!
     completedDate: AWSDateTime
     status: TodoStatusEnum
 }
 
-# Mutation {
-#       shareTask(
-#         id: String!
-#         emailAddress: String!
-#     ): [UploadMediaResult]
-#         @function(name: "media-function")
-#         @aws_api_key
-# }
+input TaskCompletedInput {
+    id: ID!
+    emailAddress: String!
+}
 
-#authentication
-#notififcations+subscriptions
+input TaskCompletedResult {
+    id: ID!
+    emailAddress: String!
+}
+
+type Mutation @aws_api_key {
+    shareTask(
+        id: ID!
+        emailAddress: String!
+    ): Boolean
+        @function(name: "share-task")
+        @aws_api_key
+
+   notifyTaskCompleted(input: TaskCompletedInput): TaskCompletedResult
+}
+
+# type Subscription @aws_api_key {
+#   onTaskCompleted(owner: ID!): TaskCompletedResult @aws_subscribe(mutations: ["notifyTaskCompleted"])
+# }
