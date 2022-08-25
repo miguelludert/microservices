@@ -9,7 +9,7 @@ import {
   AmplifyGeneratedCfnResource,
   AwsDataSourceType,
   AppsyncResourceType,
-  DefultFunctionProps
+  DefaultFunctionProps
 } from '../datatypes';
 import { paramCase, pascalCase } from 'change-case';
 import { join } from 'path';
@@ -20,7 +20,7 @@ import { ifError } from 'assert';
 
 // TODO: this is a strong candidate for migration to new transformer
 
-export const defaultFunctionProps : DefultFunctionProps = {
+export const defaultFunctionProps : DefaultFunctionProps = {
   runtime : Runtime.NODEJS_16_X,
   handler : "handler"
 };

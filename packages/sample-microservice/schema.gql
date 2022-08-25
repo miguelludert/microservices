@@ -16,7 +16,7 @@ input TaskCompletedInput {
     emailAddress: String!
 }
 
-input TaskCompletedResult {
+type TaskCompletedResult {
     id: ID!
     emailAddress: String!
 }

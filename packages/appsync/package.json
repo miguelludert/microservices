@@ -1,8 +1,21 @@
 {
+  "dependencies": {
+    "@aws-amplify/graphql-auth-transformer": "0.7.1",
+    "@aws-amplify/graphql-function-transformer": "0.7.9",
+    "@aws-amplify/graphql-index-transformer": "0.11.0",
+    "@aws-amplify/graphql-model-transformer": "0.13.0",
+    "@aws-amplify/graphql-transformer-core": "0.16.0",
+    "@aws-cdk/aws-appsync-alpha": "^2.36.0-alpha.0",
+    "amplify-prompts": "^2.2.0",
+    "aws-cdk-lib": "^2.37.0",
+    "change-case": "^4.1.2",
+    "constructs": "^10.1.71",
+    "esbuild": "^0.14.54"
+  },
+  "description": "This library is intended to ease the speed and burden of developing a graphql API by bringing the AWS Amplify graphql transformers into CDK.  This allows us to create full appsync stacks, complete with lambda functions and dynamo tables with minimal code inside an existing robust Infrastructure-as-Code tool.  I've chosen NOT to use amplify directly and instead leverage the graphql transformers to be compatible with existing CDK projects, to minimize the number of tools necessary to build the project, and to keep IaC tool APIs consistent.",
+  "devDependencies": {},
+  "main": "dist/src/index.js",
   "name": "@miguelludert/appsync",
-  "version": "0.0.0-alpha.2",
   "type": "commonjs",
-  "dependencies": {},
-  "devDependencies": {
-  }
+  "version": "0.0.0-alpha.10"
 }

@@ -9,6 +9,7 @@ import {
   AwsResourceType,
   AppsyncResourceType
 } from '../datatypes';
+import { BillingMode } from 'aws-cdk-lib/aws-dynamodb';
 
 export const createDynamoDataSource = (
   scope: Construct,
@@ -56,8 +57,10 @@ export const createDynamoResource = (
   } = cfn.Properties;
   const table = new aws_dynamodb.Table(scope, props.namingConvention(name), {
     tableName : props.namingConvention(name),
-    ...getDynamoAttributeProps(KeySchema, AttributeDefinitions),
     removalPolicy: DeletionPolicy,
+    billingMode: BillingMode.PAY_PER_REQUEST,
+    ...getDynamoAttributeProps(KeySchema, AttributeDefinitions),
+    ...(props.defaultDynamoProps || {})
   });
   // TODO: this is fugly naming
   const datasourceName = `${name.replace('Table','')}DataSource`;

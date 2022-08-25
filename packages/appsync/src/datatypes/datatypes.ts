@@ -2,6 +2,7 @@ import { Construct } from 'constructs';
 import { aws_cognito, aws_lambda, aws_iam } from 'aws-cdk-lib';
 import { AwsResourceType } from './cfn';
 import { FunctionOptions } from 'aws-cdk-lib/aws-lambda';
+import { TableProps } from 'aws-cdk-lib/aws-dynamodb';
 
 export const NO_SCHEMA_ERROR_MESSAGE =
   "Either 'schemaText' or a 'schemaFile' property is required.";
@@ -39,14 +40,17 @@ export interface AppsyncSchemaTransformerProps {
   outputDirectory?: string;
   namingConvention: (name: string) => string;
   baseName?: string;
-  defaultFunctionProps?: DefultFunctionProps;
+  defaultFunctionProps?: DefaultFunctionProps;
   functionProps? : Record<string, aws_lambda.Function | string>;
   subscriptions?: string[];
   customDomainName? : DomainConfig;
   apiKeyRotator? : boolean;
+  defaultDynamoProps?: DefaultDynamoProps;
 }
 
-export interface DefultFunctionProps extends FunctionOptions {
+export type DefaultDynamoProps = Partial<Omit<TableProps, "tableName" | "partitionKey" | "sortKey">>;
+
+export interface DefaultFunctionProps extends FunctionOptions {
   runtime?: aws_lambda.Runtime;
   handler?: string;
   esbuildProps? : any;
