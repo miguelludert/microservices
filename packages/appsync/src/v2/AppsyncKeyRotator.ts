@@ -1,6 +1,5 @@
 import { Construct } from 'constructs';
 import { Duration, aws_lambda, aws_secretsmanager, aws_iam } from 'aws-cdk-lib';
-//import { cfnOutputs, functionProps, getDist } from '@thriving-artist/cdk-utils';
 import {
   AppsyncSchemaTransformerProps,
   AmplifyGeneratedCfn,

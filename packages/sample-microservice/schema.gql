@@ -5,10 +5,15 @@ enum TodoStatusEnum  {
     Deleted
 }
 
-type TodoTask @model @aws_api_key {
+type TodoTask 
+    @auth(rules: [{ allow: public }])
+    @model 
+{
     id: ID!
+    description: String!
     completedDate: AWSDateTime
-    status: TodoStatusEnum
+    status: TodoStatusEnum!
+    sharedWith : [SharedWith] @hasMany
 }
 
 input TaskCompletedInput {
@@ -16,20 +21,30 @@ input TaskCompletedInput {
     emailAddress: String!
 }
 
-type TaskCompletedResult {
+type SharedWith 
+    @auth(rules: [{ allow: public }])
+    @model( mutations : null)
+{
     id: ID!
     emailAddress: String!
+    date: AWSDateTime!
 }
 
-type Mutation @aws_api_key {
+# type Query 
+# @aws_api_key
+# {
+
+# }
+
+type Mutation {
     shareTask(
         id: ID!
         emailAddress: String!
     ): Boolean
         @function(name: "share-task")
-        @aws_api_key
+        @auth(rules: [{ allow: public }])
 
-   notifyTaskCompleted(input: TaskCompletedInput): TaskCompletedResult
+   notifyTaskCompleted(input: TaskCompletedInput): SharedWith
 }
 
 # type Subscription @aws_api_key {

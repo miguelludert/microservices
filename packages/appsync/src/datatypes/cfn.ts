@@ -17,7 +17,7 @@ export enum AwsResourceType {
 export interface AmplifyGeneratedCfnResource {
   Type: AwsResourceType;
   DependsOn?: string[];
-  Properties: {
+  Properties?: {
     Type?: AwsDataSourceType;
     Name?: string;
     AttributeDefinitions?: any;
@@ -41,15 +41,19 @@ export interface AmplifyGeneratedCfnResource {
 }
 
 export interface CfnStack {
-  Resources: {
-    [key: string]: AmplifyGeneratedCfnResource;
-  };
+  Resources?: Record<string,AmplifyGeneratedCfnResource>;
+  Parameters? : Record<string,{ 
+    Type : string;
+  } | {
+    "Fn::GetAtt" : string[]
+  }>;
+  Output? : Record<string,any>;
 }
 
 export interface AmplifyGeneratedCfn {
-  rootStack: Record<string, CfnStack>;
-  resolvers: {
+  rootStack?: Record<string, CfnStack>;
+  resolvers?: {
     [key: string]: string;
   };
-  stacks: Record<string, CfnStack>;
+  stacks?: Record<string, CfnStack>;
 }

@@ -75,11 +75,18 @@ export const createBasicResolver =
     const dataSource = tryCallback(() => {
       let dataSourceName;
 
+
+      console.info(1, DataSourceName);
+
       if (typeof DataSourceName === 'string') {
         dataSourceName = DataSourceName;
       } else {
         dataSourceName = DataSourceName['Fn::GetAtt'][0];
       }
+
+
+      console.info(2);
+
       const myResource = resources.find(
         (f) =>
           f.awsType === AwsResourceType.DATASOURCE &&

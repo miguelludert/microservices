@@ -7,16 +7,6 @@ import {
   GraphQLTransform,
   TransformerPluginBase,
 } from '@aws-amplify/graphql-transformer-core';
-import { FunctionTransformer } from '@aws-amplify/graphql-function-transformer';
-import { ModelTransformer } from '@aws-amplify/graphql-model-transformer';
-import {
-  AuthTransformer,
-  AuthTransformerConfig,
-} from '@aws-amplify/graphql-auth-transformer';
-import {
-  PrimaryKeyTransformer,
-  IndexTransformer,
-} from '@aws-amplify/graphql-index-transformer';
 import { join } from 'path';
 import { createApi } from './createApi';
 import { createDynamoDataSource } from './dynamo';
@@ -30,6 +20,7 @@ import {
   AmplifyGeneratedCfn,
   AmplifyGeneratedCfnResource,
   DomainConfig,
+  ResourceByStackAndName,
 } from '../datatypes';
 import { createLambdaDataSource } from './lambda';
 import { createPermissions } from './createPermissions';
@@ -40,6 +31,7 @@ import {
 //import { cfnOutputs } from '@thriving-artist/cdk-utils';
 import { AppsyncKeyRotator, createRotator } from './AppsyncKeyRotator';
 import { cfnOutputs } from '../utils/cfn-outputs';
+import { getCloudFormation } from '../schema';
 
 export class AppsyncSchemaTransformer extends NestedStack {
   resources: AppsyncResource[] = [];
@@ -49,19 +41,25 @@ export class AppsyncSchemaTransformer extends NestedStack {
   cfnResources: Record<string, AmplifyGeneratedCfnResource>;
   cfn: AmplifyGeneratedCfn;
   props: AppsyncSchemaTransformerProps;
+  private _resourcesByStackAndName? : ResourceByStackAndName[] = [];
 
   findCfnResourcesByType(
     awsType: AwsResourceType
-  ): { name: string; cfn: AmplifyGeneratedCfnResource }[] {
-    return Object.entries(this.cfnResources)
-      .filter(
-        ([name, cfn]: [name: string, cfn: AmplifyGeneratedCfnResource]) =>
-          cfn.Type === awsType
-      )
-      .map(([name, cfn]: [name: string, cfn: AmplifyGeneratedCfnResource]) => ({
-        name,
-        cfn,
-      }));
+  ): ResourceByStackAndName[] {
+    if(this._resourcesByStackAndName.length === 0) {
+      this._resourcesByStackAndName = Object.entries(this.cfn.stacks).reduce((acc, value) => {
+        const [stackName, stack] = value;
+        const resources = Object.entries(stack.Resources).map(([name, cfn]: [name: string, cfn: AmplifyGeneratedCfnResource]) => ({
+          stackName,
+          name,
+          cfn,
+        }));
+        return [...acc,...resources]
+      }, []);
+    }
+    return this._resourcesByStackAndName.filter((resource) => {
+      return resource.cfn.Type === awsType
+    });
   }
 
   findAppsyncResourcesByCfnName(cfnName: string): AppsyncResource | undefined {
@@ -95,7 +93,7 @@ export class AppsyncSchemaTransformer extends NestedStack {
     super(scope, name);
 
     if (!props.authorizationConfig) {
-      console.warn("No configuration has been explicitly defined. A default API key has been created.")
+      console.warn("No auth config has been explicitly defined. A default API key has been created.")
       props.authorizationConfig = [{
         authType : AuthType.ApiKey,
         apiKeyConfig : {
@@ -105,22 +103,11 @@ export class AppsyncSchemaTransformer extends NestedStack {
       }];
     }
 
-    const { gqlSchemaPath, subscriptions } = props;
-    const schemaText = readFileSync(gqlSchemaPath, 'utf8');
-    const authTransformerProps = getAuthTransformerProps(props);
-    const transformers = [
-      new ModelTransformer(),
-      new AuthTransformer(authTransformerProps),
-      new PrimaryKeyTransformer(),
-      new IndexTransformer(),
-      new FunctionTransformer(),
-    ];
-
+    const { cfn, cfnResources } = getCloudFormation(props);
     this.props = props;
-    this.cfn = transformSchema(schemaText, transformers);
-    this.cfnResources = getCfnResources(this.cfn);
+    this.cfn = cfn;
+    this.cfnResources = cfnResources;
 
-    writeOutputFiles(this.props, this.cfn);
     props.baseName = name;
     this.api = createApi(this, this.props, this.cfn);
     this.noneDataSource = createNoneDataSource(this.api);
@@ -142,8 +129,8 @@ export class AppsyncSchemaTransformer extends NestedStack {
     this.addResources(createLambdaDataSource(this, this.props, this.api, this.cfn));
     this.addResources(createFuntionConfigurations(this));
     this.addResources(createResolvers(this));
-    this.addResources(subscriptions?.map((name) => createSubscription(this, name)));
-    console.info(6);
+    this.addResources(props.subscriptions?.map((name) => createSubscription(this, name)));
+    
     // add custom domain name
     this.addResources(createPermissions(this, this.props, this.api, this.cfn, this.resources));
     
@@ -154,19 +141,6 @@ export class AppsyncSchemaTransformer extends NestedStack {
     }, props.namingConvention);
   }
 }
-
-export const transformSchema = (
-  schemaText: string,
-  transformers: TransformerPluginBase[]
-): AmplifyGeneratedCfn => {
-  const gqlTransform = new GraphQLTransform({
-    transformers,
-  });
-
-  // ugly hack, get rid of this
-  const cfSchema = (gqlTransform.transform(schemaText) as any) as AmplifyGeneratedCfn;
-  return cfSchema;
-};
 
 export const getCfnResources = (cfn: AmplifyGeneratedCfn) => {
   const allEntries = [
@@ -229,20 +203,6 @@ export function getAuthConfig(config: AuthConfig) {
   } else {
     throw new Error('getAuthConfig: auth config must match an AuthType');
   }
-}
-
-export function getAuthTransformerProps(
-  props: AppsyncSchemaTransformerProps
-): AuthTransformerConfig | null {
-  const [defaultTransformer, ...additionalTransformers] = props.authorizationConfig;
-  const result = {
-    authConfig: {
-      defaultAuthentication: getAuthConfig(defaultTransformer),
-      additionalAuthenticationProviders:
-        additionalTransformers.map(getAuthConfig),
-    },
-  };
-  return result;
 }
 
 export function createNoneDataSource(api: aws_appsync.GraphqlApi) {

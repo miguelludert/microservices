@@ -5,11 +5,14 @@ import {
   AppsyncResourceType,
   AppsyncSchemaTransformerProps,
   AwsResourceType,
+  ResourceByStackAndName,
 } from '../datatypes';
 import * as aws_appsync from '@aws-cdk/aws-appsync-alpha';
 import { Construct } from 'constructs';
 import { pascalCase } from 'change-case';
 import { AppsyncSchemaTransformer } from '..';
+//import { handler } from 'src/functions/apikey-rotator';
+import { getResourceNameFromReference } from '../utils/getResourceReference';
 
 export function createResolvers(
   scope: AppsyncSchemaTransformer
@@ -17,7 +20,7 @@ export function createResolvers(
   const cfnResolvers = scope.findCfnResourcesByType(AwsResourceType.RESOLVER);
   const functionConfigs = cfnResolvers
     .map((cfnResolver) =>
-      createSingleResolver(scope, cfnResolver.name, cfnResolver.cfn)
+      createSingleResolver(scope, cfnResolver.name, cfnResolver)
     )
     .flat();
   return functionConfigs;
@@ -26,7 +29,8 @@ export function createResolvers(
 export function createFuntionConfigurations(
   scope: AppsyncSchemaTransformer
 ): AppsyncResource[] {
-  const cfnFunctionConfigs = scope.findCfnResourcesByType(AwsResourceType.FUNCTION_CONFIGURATION);
+
+  const cfnFunctionConfigs = scope.findCfnResourcesByType(AwsResourceType.FUNCTION_CONFIGURATION); 
   const functionConfigs = cfnFunctionConfigs
     .map((cfnFunctionConfig) =>
       createSingleFunctionConfig(
@@ -42,21 +46,22 @@ export function createFuntionConfigurations(
 export function createSingleResolver(
   scope: AppsyncSchemaTransformer,
   cfnName : string,
-  cfnResource: AmplifyGeneratedCfnResource
+  cfnResource: ResourceByStackAndName
 ): AppsyncResource[] {
   const { resources, cfn, api, props } = scope;
-  const { FieldName, TypeName, Kind, PipelineConfig : { Functions }} = cfnResource.Properties;
+  const { FieldName, TypeName, Kind, PipelineConfig : { Functions }} = cfnResource.cfn.Properties;
+
 
   let construct, type;
   if (Kind === 'PIPELINE') {
     const pipelineConfig = Functions.map(func => {
-      const name = func["Fn::GetAtt"][0];
+      let name : string = getResourceNameFromReference(cfn ,cfnResource.stackName, func);
       const { construct } = scope.findAppsyncResourcesByCfnName(name);
       return construct as aws_appsync.AppsyncFunction;
     });
     const resolverMappingTemplates = getResolverTemplates(
       scope,
-      cfnResource
+      cfnResource.cfn
     );
     type = AppsyncResourceType.PIPELINE_RESOLVER;
     construct = new aws_appsync.Resolver(
@@ -74,7 +79,6 @@ export function createSingleResolver(
     //const dataSource = getDataSource(cfnResource, resources);
     throw new Error('Not implemented');
   }
-
   return [{
     type,
     awsType : AwsResourceType.RESOLVER,
@@ -144,6 +148,8 @@ export function getResolverMappingTemplate(
         throw new Error(`getResolverMappingTemplate: Cannot parse resolver template: ${JSON.stringify(chunks)}`)
       }
     }).join('');
+  } else if(typeof location === 'string') {
+    result = location;
   } else {
     const resolverPath = location[FN_JOIN][1].pop();
     const resolversName = resolverPath.replace(resolversRegex, '');

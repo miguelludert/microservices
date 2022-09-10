@@ -13,13 +13,15 @@ class AppsyncStack extends Stack
     constructor(scope : App ,name : string) {
         super(scope,name);
         new AppsyncSchemaTransformer(this, namingConvention(`appsync`), {
-            gqlSchemaPath : join(__dirname,'../schema.gql'),
             namingConvention,
+            gqlSchemaPath : join(__dirname,'../schema.gql'),
             outputDirectory : join(__dirname,'../dist'),
             functionProps : {
                 "share-task"  : join(__dirname, 'functions/share-task/index.ts') // by entry point file path
             }
         });
+        // s3 bucket for static hosting
+        // build and upload
     }
 }   
 

@@ -75,7 +75,6 @@ export function createLambdaFunction(scope : Construct, props: AppsyncSchemaTran
       ...restProps
     } = defaultProps;
 
-    console.info("sdfsadf: " +  props.outputDirectory);
     if(!props.outputDirectory) { 
       throw new Error(`'props.outputDirectory' is required when creating lambda functions.`)
     }

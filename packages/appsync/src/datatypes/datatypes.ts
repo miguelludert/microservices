@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { aws_cognito, aws_lambda, aws_iam } from 'aws-cdk-lib';
-import { AwsResourceType } from './cfn';
+import { AmplifyGeneratedCfnResource, AwsResourceType } from './cfn';
 import { FunctionOptions } from 'aws-cdk-lib/aws-lambda';
 import { TableProps } from 'aws-cdk-lib/aws-dynamodb';
 
@@ -47,6 +47,8 @@ export interface AppsyncSchemaTransformerProps {
   apiKeyRotator? : boolean;
   defaultDynamoProps?: DefaultDynamoProps;
 }
+
+export type ResourceByStackAndName = { stackName : string, name: string; cfn: AmplifyGeneratedCfnResource };
 
 export type DefaultDynamoProps = Partial<Omit<TableProps, "tableName" | "partitionKey" | "sortKey">>;
 
