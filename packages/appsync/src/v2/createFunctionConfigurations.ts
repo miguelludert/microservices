@@ -35,8 +35,7 @@ export function createFuntionConfigurations(
     .map((cfnFunctionConfig) =>
       createSingleFunctionConfig(
         scope,
-        cfnFunctionConfig.name,
-        cfnFunctionConfig.cfn
+        cfnFunctionConfig
       )
     )
     .flat();
@@ -50,8 +49,6 @@ export function createSingleResolver(
 ): AppsyncResource[] {
   const { resources, cfn, api, props } = scope;
   const { FieldName, TypeName, Kind, PipelineConfig : { Functions }} = cfnResource.cfn.Properties;
-
-
   let construct, type;
   if (Kind === 'PIPELINE') {
     const pipelineConfig = Functions.map(func => {
@@ -59,7 +56,7 @@ export function createSingleResolver(
       const { construct } = scope.findAppsyncResourcesByCfnName(name);
       return construct as aws_appsync.AppsyncFunction;
     });
-    const resolverMappingTemplates = getResolverTemplates(
+    const resolverMappingTemplates = getMappingTemplates(
       scope,
       cfnResource.cfn
     );
@@ -89,16 +86,15 @@ export function createSingleResolver(
 
 export function createSingleFunctionConfig(
   scope: AppsyncSchemaTransformer,
-  cfnName : string,
-  cfnResource: AmplifyGeneratedCfnResource
+  cfnResource: ResourceByStackAndName
 ): AppsyncResource[] {
   const { resources, api, props } = scope;
-  const functionName = cfnResource.Properties.Name;
-  const resolverMappingTemplates = getResolverTemplates(
+  const functionName = cfnResource.cfn.Properties.Name;
+  const resolverMappingTemplates = getMappingTemplates(
     scope,
-    cfnResource
+    cfnResource.cfn
   );
-  const dataSource = getDataSource(cfnResource, resources);
+  const dataSource = getDataSource(scope, cfnResource);
   const construct = new aws_appsync.AppsyncFunction(
     scope,
     props.namingConvention(functionName),
@@ -115,7 +111,7 @@ export function createSingleFunctionConfig(
       awsType: AwsResourceType.FUNCTION_CONFIGURATION,
       name: functionName,
       construct,
-      cfnName
+      cfnName : cfnResource.name
     },
   ];
   return result;
@@ -163,7 +159,7 @@ export function getResolverMappingTemplate(
   return aws_appsync.MappingTemplate.fromString(result);
 }
 
-export function getResolverTemplates(
+export function getMappingTemplates(
   scope : AppsyncSchemaTransformer,
   cfnResource: AmplifyGeneratedCfnResource
 ) {
@@ -188,32 +184,24 @@ export function getResolverTemplates(
 }
 
 export function getDataSource(
-  cfnResource: AmplifyGeneratedCfnResource,
-  resources: AppsyncResource[]
+  scope: AppsyncSchemaTransformer,
+  cfnResource: ResourceByStackAndName
 ) {
-  const dataSources = resources.filter(
-    (f: AppsyncResource) => f.awsType === AwsResourceType.DATASOURCE
-  );
-  const dataSourceName = cfnResource.Properties.DataSourceName;
-  let dataSource: aws_appsync.BaseDataSource;
+  const dataSourceNameRef = cfnResource.cfn.Properties.DataSourceName;
+  const dataSourceName = getResourceNameFromReference(scope.cfn, cfnResource.stackName, dataSourceNameRef);
 
-  // TODO: optimize this search.  we can memoize
-  if (dataSourceName.Ref && typeof dataSourceName.Ref === 'string') {
-    dataSource = dataSources.find(
-      (f: AppsyncResource) => f.type === AppsyncResourceType.NONE_DATASOURCE
-    ).construct as aws_appsync.BaseDataSource;
-  } else {
-    const name = dataSourceName['Fn::GetAtt'][0];
-    dataSource = dataSources.find((f: AppsyncResource) => f.name === name)
-      .construct as aws_appsync.BaseDataSource;
-  }
-
-  if (!dataSource) {
-    throw new Error(
-      `getDataSource: No datasource found for DataSourceName ${JSON.stringify(
-        dataSourceName
-      )}`
-    );
+  //TODO : create none data source that we can find by reference
+  let dataSource : aws_appsync.BaseDataSource = scope.noneDataSource; 
+  if(dataSourceName) {
+    dataSource =  scope.resources.find((f) => f.name === dataSourceName).construct as aws_appsync.BaseDataSource;
+    //dataSource = scope.findAppsyncResourcesByCfnName(dataSourceName).construct as aws_appsync.BaseDataSource;
+    if (!dataSource) {
+      throw new Error(
+        `getDataSource: No datasource found for DataSourceName ${JSON.stringify(
+          dataSourceName
+        )}`
+      );
+    }
   }
   return dataSource;
 }

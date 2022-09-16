@@ -5,7 +5,7 @@ import { ModelTransformer } from "@aws-amplify/graphql-model-transformer";
 import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { AmplifyGeneratedCfn, AppsyncSchemaTransformerProps, ResourceByStackAndName } from "../datatypes";
-import { getAuthConfig, getCfnResources } from "../v2/AppsyncSchemaTransformer";
+import { getAuthConfig } from "../v2/AppsyncSchemaTransformer";
 import {
     HasOneTransformer,
     HasManyTransformer,
@@ -47,12 +47,7 @@ export const getCloudFormation = (props : AppsyncSchemaTransformerProps) => {
         manyToMany
     ];
     const cfn = transformSchema(schemaText, transformers);
-    const cfnResources = getCfnResources(cfn);
-    writeOutputFiles(props, cfn);
-    return {
-        cfn,
-        cfnResources
-    };
+    return cfn;
 };
 
 export const transformSchema = (

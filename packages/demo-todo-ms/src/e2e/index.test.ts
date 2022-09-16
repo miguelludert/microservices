@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import { appsyncClient } from '@miguelludert/ms-client';
+import exp = require('constants');
 import { randomUUID } from 'crypto';
 // import * as dotenv from 'dotenv';
 // import { join } from 'path';
@@ -19,12 +20,16 @@ describe("sample microservice", () => {
         // create a todotask with an image
         // query both together
 
-        it("should create image and todo (confirms create)", async () => { 
+        it("should create image, create todo, and query todo", async () => { 
+            const expectedTodoId = randomUUID(); 
+            const expectedImageId = randomUUID(); 
+            const expectedImageUrl = "https://www.google.com"; 
+            const expectedDescription = "hello world";
             const imageResult = await appsyncClient({
                 query : `mutation MyMutation {
                     createImage(input: {
-                        id: "${randomUUID()}",
-                        url: "https://www.google.com"
+                        id: "${expectedImageId}",
+                        url: "${expectedImageUrl}"
                     }) {
                       id
                     }
@@ -34,35 +39,32 @@ describe("sample microservice", () => {
             const todoResult = await appsyncClient({
                 query : `mutation MyMutation {
                     createTodoTask(input: {
-                        id: "${randomUUID()}"
-                        description: "hello world", 
+                        id: "${expectedTodoId}"
+                        description: "${expectedDescription}", 
                         imageId: "${imageId}", status: New}){
                             id
                         }
                     }`
             });
             const toDoId = todoResult.createTodoTask.id;
-            const todoQueryResult = await appsyncClient({
+            const { getTodoTask : todoQueryResult } = await appsyncClient({
                 query : `query MyQuery {
                     getTodoTask(id: "${toDoId}") {
-                      id
-                      status
-                      image {
                         id
-                        url
-                      }
-                      description
+                        description
+                        image {
+                            id
+                            url
+                        }
                     }
-                  }
-                `
+                }`
             });
-            console.info(todoQueryResult);
+            expect(todoQueryResult.id).toBe(expectedTodoId);
+            expect(todoQueryResult.description).toBe(expectedDescription);
+            expect(todoQueryResult.image.id).toBe(expectedImageId);
+            expect(todoQueryResult.image.url).toBe(expectedImageUrl);
         });
-        it("should query (confirms query)", async () => { 
-            // create a todotask with an image
-            // query both together
-        });
-        it("should update (confirms update", async () => { 
+        it("should update ", async () => { 
             // create a todotask with an image
             // query both together
         });
@@ -70,11 +72,7 @@ describe("sample microservice", () => {
             // create a todotask with an image
             // query both together
         });
-        it("should list (confirms lists)' ", async () => { 
-            // create a todotask with an image
-            // query both together
-        });
-        it("should cleanup (confirms delete)' ", async () => { 
+        it("should list and delete", async () => { 
             // create a todotask with an image
             // query both together
         });

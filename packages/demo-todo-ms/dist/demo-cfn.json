@@ -5151,7 +5151,7 @@
             ]
           },
           "Description": "Default API Key",
-          "Expires": 1663910279
+          "Expires": 1663947896
         },
         "Metadata": {
           "aws:cdk:path": "transformer-root-stack/GraphQLAPI/DefaultApiKey"

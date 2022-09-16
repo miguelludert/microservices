@@ -72,7 +72,7 @@
                           ]
                         },
                         "description": "Default API key.",
-                        "expires": 1694841480
+                        "expires": 1694884823
                       }
                     },
                     "constructInfo": {
@@ -3442,7 +3442,7 @@
                           {
                             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                           },
-                          "/9bb307b1248356087338d483c0b56bc4d9a0469ec673396c73e2faf5dd64a0e8.json"
+                          "/08c2097d3f9096283806ca6295b387b42627a31b383547ed9c0b7239a9f16ab3.json"
                         ]
                       ]
                     }

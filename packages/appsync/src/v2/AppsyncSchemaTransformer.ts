@@ -32,32 +32,21 @@ import {
 import { AppsyncKeyRotator, createRotator } from './AppsyncKeyRotator';
 import { cfnOutputs } from '../utils/cfn-outputs';
 import { getCloudFormation } from '../schema';
+import { getCfnResourcesByStackAndName } from './getCfnResources';
 
 export class AppsyncSchemaTransformer extends NestedStack {
   resources: AppsyncResource[] = [];
   rotator?: AppsyncKeyRotator;
   api: aws_appsync.GraphqlApi;
   noneDataSource: aws_appsync.NoneDataSource;
-  cfnResources: Record<string, AmplifyGeneratedCfnResource>;
   cfn: AmplifyGeneratedCfn;
   props: AppsyncSchemaTransformerProps;
-  private _resourcesByStackAndName? : ResourceByStackAndName[] = [];
+  cfnResourcesByStackAndName? : ResourceByStackAndName[] = [];
 
   findCfnResourcesByType(
     awsType: AwsResourceType
   ): ResourceByStackAndName[] {
-    if(this._resourcesByStackAndName.length === 0) {
-      this._resourcesByStackAndName = Object.entries(this.cfn.stacks).reduce((acc, value) => {
-        const [stackName, stack] = value;
-        const resources = Object.entries(stack.Resources).map(([name, cfn]: [name: string, cfn: AmplifyGeneratedCfnResource]) => ({
-          stackName,
-          name,
-          cfn,
-        }));
-        return [...acc,...resources]
-      }, []);
-    }
-    return this._resourcesByStackAndName.filter((resource) => {
+    return this.cfnResourcesByStackAndName.filter((resource) => {
       return resource.cfn.Type === awsType
     });
   }
@@ -103,10 +92,9 @@ export class AppsyncSchemaTransformer extends NestedStack {
       }];
     }
 
-    const { cfn, cfnResources } = getCloudFormation(props);
     this.props = props;
-    this.cfn = cfn;
-    this.cfnResources = cfnResources;
+    this.cfn = getCloudFormation(props);
+    this.cfnResourcesByStackAndName = getCfnResourcesByStackAndName(this.cfn);
 
     props.baseName = name;
     this.api = createApi(this, this.props, this.cfn);
@@ -127,8 +115,6 @@ export class AppsyncSchemaTransformer extends NestedStack {
     ]);
     this.addResources(createDynamoDataSource(this, this.props, this.api, this.cfn));
     this.addResources(createLambdaDataSource(this, this.props, this.api, this.cfn));
-
-    console.info(3);
     this.addResources(createFuntionConfigurations(this));
     this.addResources(createResolvers(this));
     this.addResources(props.subscriptions?.map((name) => createSubscription(this, name)));
@@ -140,16 +126,6 @@ export class AppsyncSchemaTransformer extends NestedStack {
     createRotator(this);
   }
 }
-
-export const getCfnResources = (cfn: AmplifyGeneratedCfn) => {
-  const allEntries = [
-    ...Object.entries(cfn.rootStack['Resources']),
-    ...Object.values(cfn.stacks)
-      .map((stack) => Object.entries(stack.Resources))
-      .flat(),
-  ];
-  return Object.fromEntries(allEntries);
-};
 
 export function writeOutputFiles(
   props: AppsyncSchemaTransformerProps,

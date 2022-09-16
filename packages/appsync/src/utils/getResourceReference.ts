@@ -1,6 +1,6 @@
 import { AmplifyGeneratedCfn, ResourceByStackAndName } from "../datatypes";
 
-export function getResourceNameFromReference(cfn : AmplifyGeneratedCfn, currentStackName : string, ref : any) { 
+export function getResourceNameFromReference(cfn : AmplifyGeneratedCfn, currentStackName : string, ref : any) : string{ 
   if(ref.Ref) {
     const parameterName = ref.Ref as string;
     const [refStackName, parameters] = cfn.rootStack['Resources'][currentStackName].Properties.Parameters[parameterName]["Fn::GetAtt"];
