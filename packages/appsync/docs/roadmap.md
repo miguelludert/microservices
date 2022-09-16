@@ -1,4 +1,3 @@
-
 * publish to npm
 * subscriptions/websockets
 * autoId resolver

@@ -1,5 +1,6 @@
 {
   "name": "@miguelludert/appsync",
-  "version": "0.0.1",
-  "type": "commonjs"
+  "version": "0.0.0-alpha.13",
+  "type": "commonjs",
+  "main": "dist/src/index.js"
 }
