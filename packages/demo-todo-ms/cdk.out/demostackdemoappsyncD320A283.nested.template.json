@@ -1,0 +1,2661 @@
+{
+ "Resources": {
+  "demographqlapiDA442B10": {
+   "Type": "AWS::AppSync::GraphQLApi",
+   "Properties": {
+    "AuthenticationType": "API_KEY",
+    "Name": "demo-graphql-api"
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/Resource"
+   }
+  },
+  "demographqlapiSchemaD6A25D50": {
+   "Type": "AWS::AppSync::GraphQLSchema",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Definition": "\nenum TodoStatusEnum {\n  New\n  Active\n  Complete\n  Deleted\n}\n\ntype TodoTask {\n  description: String!\n  completedDate: AWSDateTime\n  status: TodoStatusEnum!\n  sharedWith(filter: ModelSharedWithFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelSharedWithConnection\n  image: Image\n  imageId: ID\n  id: ID!\n  createdAt: AWSDateTime!\n  updatedAt: AWSDateTime!\n}\n\ntype Image {\n  url: String!\n  id: ID!\n  createdAt: AWSDateTime!\n  updatedAt: AWSDateTime!\n}\n\ninput TaskCompletedInput {\n  id: ID!\n  emailAddress: String!\n}\n\ntype SharedWith {\n  emailAddress: String!\n  date: AWSDateTime!\n  id: ID!\n  createdAt: AWSDateTime!\n  updatedAt: AWSDateTime!\n  todoTaskSharedWithId: ID\n}\n\ntype Mutation {\n  shareTask(id: ID!, emailAddress: String!): Boolean @aws_api_key\n  notifyTaskCompleted(input: TaskCompletedInput): SharedWith\n  createTodoTask(input: CreateTodoTaskInput!, condition: ModelTodoTaskConditionInput): TodoTask\n  updateTodoTask(input: UpdateTodoTaskInput!, condition: ModelTodoTaskConditionInput): TodoTask\n  deleteTodoTask(input: DeleteTodoTaskInput!, condition: ModelTodoTaskConditionInput): TodoTask\n  createImage(input: CreateImageInput!, condition: ModelImageConditionInput): Image\n  updateImage(input: UpdateImageInput!, condition: ModelImageConditionInput): Image\n  deleteImage(input: DeleteImageInput!, condition: ModelImageConditionInput): Image\n}\n\ninput ModelStringInput {\n  ne: String\n  eq: String\n  le: String\n  lt: String\n  ge: String\n  gt: String\n  contains: String\n  notContains: String\n  between: [String]\n  beginsWith: String\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n  size: ModelSizeInput\n}\n\ninput ModelIntInput {\n  ne: Int\n  eq: Int\n  le: Int\n  lt: Int\n  ge: Int\n  gt: Int\n  between: [Int]\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n}\n\ninput ModelFloatInput {\n  ne: Float\n  eq: Float\n  le: Float\n  lt: Float\n  ge: Float\n  gt: Float\n  between: [Float]\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n}\n\ninput ModelBooleanInput {\n  ne: Boolean\n  eq: Boolean\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n}\n\ninput ModelIDInput {\n  ne: ID\n  eq: ID\n  le: ID\n  lt: ID\n  ge: ID\n  gt: ID\n  contains: ID\n  notContains: ID\n  between: [ID]\n  beginsWith: ID\n  attributeExists: Boolean\n  attributeType: ModelAttributeTypes\n  size: ModelSizeInput\n}\n\ninput ModelSubscriptionStringInput {\n  ne: String\n  eq: String\n  le: String\n  lt: String\n  ge: String\n  gt: String\n  contains: String\n  notContains: String\n  between: [String]\n  beginsWith: String\n  in: [String]\n  notIn: [String]\n}\n\ninput ModelSubscriptionIntInput {\n  ne: Int\n  eq: Int\n  le: Int\n  lt: Int\n  ge: Int\n  gt: Int\n  between: [Int]\n  in: [Int]\n  notIn: [Int]\n}\n\ninput ModelSubscriptionFloatInput {\n  ne: Float\n  eq: Float\n  le: Float\n  lt: Float\n  ge: Float\n  gt: Float\n  between: [Float]\n  in: [Float]\n  notIn: [Float]\n}\n\ninput ModelSubscriptionBooleanInput {\n  ne: Boolean\n  eq: Boolean\n}\n\ninput ModelSubscriptionIDInput {\n  ne: ID\n  eq: ID\n  le: ID\n  lt: ID\n  ge: ID\n  gt: ID\n  contains: ID\n  notContains: ID\n  between: [ID]\n  beginsWith: ID\n  in: [ID]\n  notIn: [ID]\n}\n\nenum ModelAttributeTypes {\n  binary\n  binarySet\n  bool\n  list\n  map\n  number\n  numberSet\n  string\n  stringSet\n  _null\n}\n\ninput ModelSizeInput {\n  ne: Int\n  eq: Int\n  le: Int\n  lt: Int\n  ge: Int\n  gt: Int\n  between: [Int]\n}\n\nenum ModelSortDirection {\n  ASC\n  DESC\n}\n\ntype ModelTodoTaskConnection {\n  items: [TodoTask]!\n  nextToken: String\n}\n\ninput ModelTodoStatusEnumInput {\n  eq: TodoStatusEnum\n  ne: TodoStatusEnum\n}\n\ninput ModelTodoTaskFilterInput {\n  description: ModelStringInput\n  completedDate: ModelStringInput\n  status: ModelTodoStatusEnumInput\n  imageId: ModelIDInput\n  and: [ModelTodoTaskFilterInput]\n  or: [ModelTodoTaskFilterInput]\n  not: ModelTodoTaskFilterInput\n}\n\ntype Query {\n  getTodoTask(id: ID!): TodoTask\n  listTodoTasks(filter: ModelTodoTaskFilterInput, limit: Int, nextToken: String): ModelTodoTaskConnection\n  getImage(id: ID!): Image\n  listImages(filter: ModelImageFilterInput, limit: Int, nextToken: String): ModelImageConnection\n  getSharedWith(id: ID!): SharedWith\n  listSharedWiths(filter: ModelSharedWithFilterInput, limit: Int, nextToken: String): ModelSharedWithConnection\n}\n\ninput ModelTodoTaskConditionInput {\n  description: ModelStringInput\n  completedDate: ModelStringInput\n  status: ModelTodoStatusEnumInput\n  imageId: ModelIDInput\n  and: [ModelTodoTaskConditionInput]\n  or: [ModelTodoTaskConditionInput]\n  not: ModelTodoTaskConditionInput\n}\n\ninput CreateTodoTaskInput {\n  description: String!\n  completedDate: AWSDateTime\n  status: TodoStatusEnum!\n  imageId: ID\n  id: ID\n}\n\ninput UpdateTodoTaskInput {\n  description: String\n  completedDate: AWSDateTime\n  status: TodoStatusEnum\n  imageId: ID\n  id: ID!\n}\n\ninput DeleteTodoTaskInput {\n  id: ID!\n}\n\ntype Subscription {\n  onCreateTodoTask: TodoTask @aws_subscribe(mutations: [\"createTodoTask\"])\n  onUpdateTodoTask: TodoTask @aws_subscribe(mutations: [\"updateTodoTask\"])\n  onDeleteTodoTask: TodoTask @aws_subscribe(mutations: [\"deleteTodoTask\"])\n  onCreateImage: Image @aws_subscribe(mutations: [\"createImage\"])\n  onUpdateImage: Image @aws_subscribe(mutations: [\"updateImage\"])\n  onDeleteImage: Image @aws_subscribe(mutations: [\"deleteImage\"])\n}\n\ntype ModelImageConnection {\n  items: [Image]!\n  nextToken: String\n}\n\ninput ModelImageFilterInput {\n  url: ModelStringInput\n  and: [ModelImageFilterInput]\n  or: [ModelImageFilterInput]\n  not: ModelImageFilterInput\n}\n\ninput ModelImageConditionInput {\n  url: ModelStringInput\n  and: [ModelImageConditionInput]\n  or: [ModelImageConditionInput]\n  not: ModelImageConditionInput\n}\n\ninput CreateImageInput {\n  url: String!\n  id: ID\n}\n\ninput UpdateImageInput {\n  url: String\n  id: ID!\n}\n\ninput DeleteImageInput {\n  id: ID!\n}\n\ntype ModelSharedWithConnection {\n  items: [SharedWith]!\n  nextToken: String\n}\n\ninput ModelSharedWithFilterInput {\n  emailAddress: ModelStringInput\n  date: ModelStringInput\n  and: [ModelSharedWithFilterInput]\n  or: [ModelSharedWithFilterInput]\n  not: ModelSharedWithFilterInput\n  todoTaskSharedWithId: ModelIDInput\n}\n\n"
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/Schema"
+   }
+  },
+  "demographqlapiDefaultApiKeyB1F3BCF5": {
+   "Type": "AWS::AppSync::ApiKey",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Description": "Default API key.",
+    "Expires": 1694841480
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/DefaultApiKey"
+   }
+  },
+  "demographqlapiNONED9DC3D4E": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Name": "NONE",
+    "Type": "NONE"
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/NONE/Resource"
+   }
+  },
+  "demographqlapidemotodotaskdatasourceServiceRole953D5CF7": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-todo-task-data-source/ServiceRole/Resource"
+   }
+  },
+  "demographqlapidemotodotaskdatasourceServiceRoleDefaultPolicy3E290CD4": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demotodotasktableEB90FD6F",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "demographqlapidemotodotaskdatasourceServiceRoleDefaultPolicy3E290CD4",
+    "Roles": [
+     {
+      "Ref": "demographqlapidemotodotaskdatasourceServiceRole953D5CF7"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-todo-task-data-source/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "demographqlapidemotodotaskdatasource1DCB4AB9": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Name": "TodoTaskDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "Description": "TodoTaskDataSource",
+    "DynamoDBConfig": {
+     "AwsRegion": {
+      "Ref": "AWS::Region"
+     },
+     "TableName": {
+      "Ref": "demotodotasktableEB90FD6F"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "demographqlapidemotodotaskdatasourceServiceRole953D5CF7",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-todo-task-data-source/Resource"
+   }
+  },
+  "demographqlapidemoimagedatasourceServiceRoleA616556A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-image-data-source/ServiceRole/Resource"
+   }
+  },
+  "demographqlapidemoimagedatasourceServiceRoleDefaultPolicy4AB3B9C7": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demoimagetable0C4AACC5",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "demographqlapidemoimagedatasourceServiceRoleDefaultPolicy4AB3B9C7",
+    "Roles": [
+     {
+      "Ref": "demographqlapidemoimagedatasourceServiceRoleA616556A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-image-data-source/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "demographqlapidemoimagedatasourceFE705BB5": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Name": "ImageDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "Description": "ImageDataSource",
+    "DynamoDBConfig": {
+     "AwsRegion": {
+      "Ref": "AWS::Region"
+     },
+     "TableName": {
+      "Ref": "demoimagetable0C4AACC5"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "demographqlapidemoimagedatasourceServiceRoleA616556A",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-image-data-source/Resource"
+   }
+  },
+  "demographqlapidemosharedwithdatasourceServiceRole13A70CC2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-shared-with-data-source/ServiceRole/Resource"
+   }
+  },
+  "demographqlapidemosharedwithdatasourceServiceRoleDefaultPolicy3424580D": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demosharedwithtable46EE1066",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "demosharedwithtable46EE1066",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "demographqlapidemosharedwithdatasourceServiceRoleDefaultPolicy3424580D",
+    "Roles": [
+     {
+      "Ref": "demographqlapidemosharedwithdatasourceServiceRole13A70CC2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-shared-with-data-source/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "demographqlapidemosharedwithdatasource2EF7ACB0": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Name": "SharedWithDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "Description": "SharedWithDataSource",
+    "DynamoDBConfig": {
+     "AwsRegion": {
+      "Ref": "AWS::Region"
+     },
+     "TableName": {
+      "Ref": "demosharedwithtable46EE1066"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "demographqlapidemosharedwithdatasourceServiceRole13A70CC2",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-graphql-api/demo-shared-with-data-source/Resource"
+   }
+  },
+  "apikeysecret5CC1F4FA": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Name": "demo-api-key-secret-name",
+    "SecretString": {
+     "Fn::GetAtt": [
+      "demographqlapiDefaultApiKeyB1F3BCF5",
+      "ApiKey"
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/api-key-secret/Resource"
+   }
+  },
+  "demotodotasktableEB90FD6F": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "demo-todo-task-table"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-todo-task-table/Resource"
+   }
+  },
+  "demoimagetable0C4AACC5": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "demo-image-table"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-image-table/Resource"
+   }
+  },
+  "demosharedwithtable46EE1066": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "todoTaskSharedWithId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "gsi-TodoTask.sharedWith",
+      "KeySchema": [
+       {
+        "AttributeName": "todoTaskSharedWithId",
+        "KeyType": "HASH"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "TableName": "demo-shared-with-table"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-shared-with-table/Resource"
+   }
+  },
+  "demosharetaskServiceRole11E22A1D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-share-task/ServiceRole/Resource"
+   }
+  },
+  "demosharetaskServiceRoleDefaultPolicy6EC32F6E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demotodotasktableEB90FD6F",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demoimagetable0C4AACC5",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demosharedwithtable46EE1066",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "demosharedwithtable46EE1066",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "demosharetaskServiceRoleDefaultPolicy6EC32F6E",
+    "Roles": [
+     {
+      "Ref": "demosharetaskServiceRole11E22A1D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-share-task/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "demosharetask47274C02": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "dee10cef4cdee80b5ef33e0c4dba9b03f79aa90d3772e029e2db28738c2ef02e.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "demosharetaskServiceRole11E22A1D",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "MS_API_URL_OUTPUT_NAME": "demo-graphql-url",
+      "MS_API_KEY_SECRET_NAME": "demo-api-key-secret-name"
+     }
+    },
+    "Handler": "index.handler",
+    "Runtime": "nodejs16.x"
+   },
+   "DependsOn": [
+    "demosharetaskServiceRoleDefaultPolicy6EC32F6E",
+    "demosharetaskServiceRole11E22A1D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-share-task/Resource",
+    "aws:asset:path": "asset.dee10cef4cdee80b5ef33e0c4dba9b03f79aa90d3772e029e2db28738c2ef02e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "demosharetasklambdadatasourceServiceRoleD883BBE9": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-share-task-lambda-data-source/ServiceRole/Resource"
+   }
+  },
+  "demosharetasklambdadatasourceServiceRoleDefaultPolicy0C5B2AB3": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "demosharetask47274C02",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "demosharetask47274C02",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "demosharetasklambdadatasourceServiceRoleDefaultPolicy0C5B2AB3",
+    "Roles": [
+     {
+      "Ref": "demosharetasklambdadatasourceServiceRoleD883BBE9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-share-task-lambda-data-source/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "demosharetasklambdadatasourceBC81E443": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "Name": "ShareTaskLambdaDataSource",
+    "Type": "AWS_LAMBDA",
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "demosharetask47274C02",
+       "Arn"
+      ]
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "demosharetasklambdadatasourceServiceRoleD883BBE9",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-share-task-lambda-data-source/Resource"
+   }
+  },
+  "demoquerygettodotaskauth0function201FA8B7": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QuerygetTodoTaskauth0Function",
+    "RequestMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#set( $isAuthorized = false )\n#set( $primaryFieldMap = {} )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized && $util.isNull($ctx.stash.authFilter) )\n$util.unauthorized()\n#end\n$util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})\n## [End] Authorization Steps. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-queryget-todo-taskauth0-function/Resource"
+   }
+  },
+  "demoquerygettodotaskpostauth0function72EBEE8E": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QuerygetTodoTaskpostAuth0Function",
+    "RequestMappingTemplate": "## [Start] Sandbox Mode Disabled. **\n#if( !$ctx.stash.get(\"hasAuth\") )\n  $util.unauthorized()\n#end\n$util.toJson({})\n## [End] Sandbox Mode Disabled. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-queryget-todo-taskpost-auth0-function/Resource"
+   }
+  },
+  "demoquerygettodotaskdataresolverfnE6BF4BF8": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QueryGetTodoTaskDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"Query\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $expression = \"\" )\n  #set( $expressionNames = {} )\n  #set( $expressionValues = {} )\n  #foreach( $item in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    #set( $expression = \"$expression#keyCount$velocityCount = :valueCount$velocityCount AND \" )\n    $util.qr($expressionNames.put(\"#keyCount$velocityCount\", $item.key))\n    $util.qr($expressionValues.put(\":valueCount$velocityCount\", $item.value))\n  #end\n  #set( $expression = $expression.replaceAll(\"AND $\", \"\") )\n  #set( $query = {\n  \"expression\": $expression,\n  \"expressionNames\": $expressionNames,\n  \"expressionValues\": $expressionValues\n} )\n#else\n  #set( $query = {\n  \"expression\": \"id = :id\",\n  \"expressionValues\": {\n      \":id\":     $util.parseJson($util.dynamodb.toDynamoDBJson($ctx.args.id))\n  }\n} )\n#end\n$util.qr($GetRequest.put(\"query\", $query))\n#if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n  $util.qr($GetRequest.put(\"filter\", $util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.stash.authFilter))))\n#end\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Get Response template. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#end\n#if( !$ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n  $util.toJson($ctx.result.items[0])\n#else\n  #if( $ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n$util.unauthorized()\n  #end\n  $util.toJson(null)\n#end\n## [End] Get Response template. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-get-todo-task-data-resolver-fn/Resource"
+   }
+  },
+  "demoquerylisttodotasksdataresolverfnF2669A16": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QueryListTodoTasksDataResolverFn",
+    "RequestMappingTemplate": "## [Start] List Request. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n#set( $limit = $util.defaultIfNull($args.limit, 100) )\n#set( $ListRequest = {\n  \"version\": \"2018-05-29\",\n  \"limit\": $limit\n} )\n#if( $args.nextToken )\n  #set( $ListRequest.nextToken = $args.nextToken )\n#end\n#if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n  #set( $filter = $ctx.stash.authFilter )\n  #if( !$util.isNullOrEmpty($args.filter) )\n    #set( $filter = {\n  \"and\":   [$filter, $args.filter]\n} )\n  #end\n#else\n  #if( !$util.isNullOrEmpty($args.filter) )\n    #set( $filter = $args.filter )\n  #end\n#end\n#if( !$util.isNullOrEmpty($filter) )\n  #set( $filterExpression = $util.parseJson($util.transform.toDynamoDBFilterExpression($filter)) )\n  #if( $util.isNullOrEmpty($filterExpression) )\n    $util.error(\"Unable to process the filter expression\", \"Unrecognized Filter\")\n  #end\n  #if( !$util.isNullOrBlank($filterExpression.expression) )\n    #if( $filterExpression.expressionValues.size() == 0 )\n      $util.qr($filterExpression.remove(\"expressionValues\"))\n    #end\n    #set( $ListRequest.filter = $filterExpression )\n  #end\n#end\n#if( !$util.isNull($ctx.stash.modelQueryExpression) && !$util.isNullOrEmpty($ctx.stash.modelQueryExpression.expression) )\n  $util.qr($ListRequest.put(\"operation\", \"Query\"))\n  $util.qr($ListRequest.put(\"query\", $ctx.stash.modelQueryExpression))\n  #if( !$util.isNull($args.sortDirection) && $args.sortDirection == \"DESC\" )\n    #set( $ListRequest.scanIndexForward = false )\n  #else\n    #set( $ListRequest.scanIndexForward = true )\n  #end\n#else\n  $util.qr($ListRequest.put(\"operation\", \"Scan\"))\n#end\n#if( !$util.isNull($ctx.stash.metadata.index) )\n  #set( $ListRequest.IndexName = $ctx.stash.metadata.index )\n#end\n$util.toJson($ListRequest)\n## [End] List Request. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-list-todo-tasks-data-resolver-fn/Resource"
+   }
+  },
+  "demomutationcreatetodotaskinit0function3E1EA1CF": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationcreateTodoTaskinit0Function",
+    "RequestMappingTemplate": "## [Start] Initialization default values. **\n$util.qr($ctx.stash.put(\"defaultValues\", $util.defaultIfNull($ctx.stash.defaultValues, {})))\n#set( $createdAt = $util.time.nowISO8601() )\n$util.qr($ctx.stash.defaultValues.put(\"id\", $util.autoId()))\n$util.qr($ctx.stash.defaultValues.put(\"createdAt\", $createdAt))\n$util.qr($ctx.stash.defaultValues.put(\"updatedAt\", $createdAt))\n$util.toJson({\n  \"version\": \"2018-05-29\",\n  \"payload\": {}\n})\n## [End] Initialization default values. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationcreate-todo-taskinit0-function/Resource"
+   }
+  },
+  "demomutationcreatetodotaskauth0functionF9B56BDD": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationcreateTodoTaskauth0Function",
+    "RequestMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#set( $inputFields = $util.parseJson($util.toJson($ctx.args.input.keySet())) )\n#set( $isAuthorized = false )\n#set( $allowedFields = [] )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized && $allowedFields.isEmpty() )\n$util.unauthorized()\n#end\n#if( !$isAuthorized )\n  #set( $deniedFields = $util.list.copyAndRemoveAll($inputFields, $allowedFields) )\n  #if( $deniedFields.size() > 0 )\n    $util.error(\"Unauthorized on ${deniedFields}\", \"Unauthorized\")\n  #end\n#end\n$util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})\n## [End] Authorization Steps. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationcreate-todo-taskauth0-function/Resource"
+   }
+  },
+  "demomutationcreatetodotaskdataresolverfnB0CBE727": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationCreateTodoTaskDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Create Request template. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n## Set the default values to put request **\n#set( $mergedValues = $util.defaultIfNull($ctx.stash.defaultValues, {}) )\n## copy the values from input **\n$util.qr($mergedValues.putAll($util.defaultIfNull($args.input, {})))\n## set the typename **\n$util.qr($mergedValues.put(\"__typename\", \"TodoTask\"))\n#set( $PutObject = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"PutItem\",\n  \"attributeValues\":   $util.dynamodb.toMapValues($mergedValues),\n  \"condition\": $condition\n} )\n#if( $args.condition )\n  $util.qr($ctx.stash.conditions.add($args.condition))\n#end\n## Begin - key condition **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyConditionExpr = {} )\n  #set( $keyConditionExprNames = {} )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyConditionExpr.put(\"keyCondition$velocityCount\", {\n  \"attributeExists\": false\n}))\n    $util.qr($keyConditionExprNames.put(\"#keyCondition$velocityCount\", \"$entry.key\"))\n  #end\n  $util.qr($ctx.stash.conditions.add($keyConditionExpr))\n#else\n  $util.qr($ctx.stash.conditions.add({\n  \"id\": {\n      \"attributeExists\": false\n  }\n}))\n#end\n## End - key condition **\n## Start condition block **\n#if( $ctx.stash.conditions && $ctx.stash.conditions.size() != 0 )\n  #set( $mergedConditions = {\n  \"and\": $ctx.stash.conditions\n} )\n  #set( $Conditions = $util.parseJson($util.transform.toDynamoDBConditionExpression($mergedConditions)) )\n  #if( $Conditions.expressionValues && $Conditions.expressionValues.size() == 0 )\n    #set( $Conditions = {\n  \"expression\": $Conditions.expression,\n  \"expressionNames\": $Conditions.expressionNames\n} )\n  #end\n  ## End condition block **\n#end\n#if( $Conditions )\n  #if( $keyConditionExprNames )\n    $util.qr($Conditions.expressionNames.putAll($keyConditionExprNames))\n  #end\n  $util.qr($PutObject.put(\"condition\", $Conditions))\n#end\n#if( $ctx.stash.metadata.modelObjectKey )\n  $util.qr($PutObject.put(\"key\", $ctx.stash.metadata.modelObjectKey))\n#else\n  #set( $Key = {\n  \"id\":   $util.dynamodb.toDynamoDB($mergedValues.id)\n} )\n  $util.qr($PutObject.put(\"key\", $Key))\n#end\n$util.toJson($PutObject)\n## [End] Create Request template. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n$util.qr($ctx.result.put(\"__operation\", \"Mutation\"))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-create-todo-task-data-resolver-fn/Resource"
+   }
+  },
+  "demomutationupdatetodotaskinit0function3793280E": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationupdateTodoTaskinit0Function",
+    "RequestMappingTemplate": "## [Start] Initialization default values. **\n$util.qr($ctx.stash.put(\"defaultValues\", $util.defaultIfNull($ctx.stash.defaultValues, {})))\n#set( $updatedAt = $util.time.nowISO8601() )\n$util.qr($ctx.stash.defaultValues.put(\"updatedAt\", $updatedAt))\n$util.toJson({\n  \"version\": \"2018-05-29\",\n  \"payload\": {}\n})\n## [End] Initialization default values. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationupdate-todo-taskinit0-function/Resource"
+   }
+  },
+  "demomutationupdatetodotaskauth0function8427D4CB": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationupdateTodoTaskauth0Function",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"GetItem\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $key = {\n  \"id\":   $util.dynamodb.toDynamoDB($ctx.args.input.id)\n} )\n#end\n$util.qr($GetRequest.put(\"key\", $key))\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#end\n#set( $inputFields = $util.parseJson($util.toJson($ctx.args.input.keySet())) )\n#set( $isAuthorized = false )\n#set( $allowedFields = [] )\n#set( $nullAllowedFields = [] )\n#set( $deniedFields = {} )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized && $allowedFields.isEmpty() && $nullAllowedFields.isEmpty() )\n$util.unauthorized()\n#end\n#if( !$isAuthorized )\n  #foreach( $entry in $util.map.copyAndRetainAllKeys($ctx.args.input, $inputFields).entrySet() )\n    #if( $util.isNull($entry.value) && !$nullAllowedFields.contains($entry.key) )\n      $util.qr($deniedFields.put($entry.key, \"\"))\n    #end\n  #end\n  #foreach( $deniedField in $util.list.copyAndRemoveAll($inputFields, $allowedFields) )\n    $util.qr($deniedFields.put($deniedField, \"\"))\n  #end\n#end\n#if( $deniedFields.keySet().size() > 0 )\n  $util.error(\"Unauthorized on ${deniedFields.keySet()}\", \"Unauthorized\")\n#end\n$util.toJson({})\n## [End] Authorization Steps. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationupdate-todo-taskauth0-function/Resource"
+   }
+  },
+  "demomutationupdatetodotaskdataresolverfn10797A29": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationUpdateTodoTaskDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Mutation Update resolver. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n## Set the default values to put request **\n#set( $mergedValues = $util.defaultIfNull($ctx.stash.defaultValues, {}) )\n## copy the values from input **\n$util.qr($mergedValues.putAll($util.defaultIfNull($args.input, {})))\n## set the typename **\n## Initialize the vars for creating ddb expression **\n#set( $expNames = {} )\n#set( $expValues = {} )\n#set( $expSet = {} )\n#set( $expAdd = {} )\n#set( $expRemove = [] )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $Key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $Key = {\n  \"id\":   $util.dynamodb.toDynamoDB($args.input.id)\n} )\n#end\n## Model key **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyFields = [] )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyFields.add(\"$entry.key\"))\n  #end\n#else\n  #set( $keyFields = [\"id\"] )\n#end\n#foreach( $entry in $util.map.copyAndRemoveAllKeys($mergedValues, $keyFields).entrySet() )\n  #if( !$util.isNull($ctx.stash.metadata.dynamodbNameOverrideMap) && $ctx.stash.metadata.dynamodbNameOverrideMap.containsKey(\"$entry.key\") )\n    #set( $entryKeyAttributeName = $ctx.stash.metadata.dynamodbNameOverrideMap.get(\"$entry.key\") )\n  #else\n    #set( $entryKeyAttributeName = $entry.key )\n  #end\n  #if( $util.isNull($entry.value) )\n    #set( $discard = $expRemove.add(\"#$entryKeyAttributeName\") )\n    $util.qr($expNames.put(\"#$entryKeyAttributeName\", \"$entry.key\"))\n  #else\n    $util.qr($expSet.put(\"#$entryKeyAttributeName\", \":$entryKeyAttributeName\"))\n    $util.qr($expNames.put(\"#$entryKeyAttributeName\", \"$entry.key\"))\n    $util.qr($expValues.put(\":$entryKeyAttributeName\", $util.dynamodb.toDynamoDB($entry.value)))\n  #end\n#end\n#set( $expression = \"\" )\n#if( !$expSet.isEmpty() )\n  #set( $expression = \"SET\" )\n  #foreach( $entry in $expSet.entrySet() )\n    #set( $expression = \"$expression $entry.key = $entry.value\" )\n    #if( $foreach.hasNext() )\n      #set( $expression = \"$expression,\" )\n    #end\n  #end\n#end\n#if( !$expAdd.isEmpty() )\n  #set( $expression = \"$expression ADD\" )\n  #foreach( $entry in $expAdd.entrySet() )\n    #set( $expression = \"$expression $entry.key $entry.value\" )\n    #if( $foreach.hasNext() )\n      #set( $expression = \"$expression,\" )\n    #end\n  #end\n#end\n#if( !$expRemove.isEmpty() )\n  #set( $expression = \"$expression REMOVE\" )\n  #foreach( $entry in $expRemove )\n    #set( $expression = \"$expression $entry\" )\n    #if( $foreach.hasNext() )\n      #set( $expression = \"$expression,\" )\n    #end\n  #end\n#end\n#set( $update = {} )\n$util.qr($update.put(\"expression\", \"$expression\"))\n#if( !$expNames.isEmpty() )\n  $util.qr($update.put(\"expressionNames\", $expNames))\n#end\n#if( !$expValues.isEmpty() )\n  $util.qr($update.put(\"expressionValues\", $expValues))\n#end\n## Begin - key condition **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyConditionExpr = {} )\n  #set( $keyConditionExprNames = {} )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyConditionExpr.put(\"keyCondition$velocityCount\", {\n  \"attributeExists\": true\n}))\n    $util.qr($keyConditionExprNames.put(\"#keyCondition$velocityCount\", \"$entry.key\"))\n  #end\n  $util.qr($ctx.stash.conditions.add($keyConditionExpr))\n#else\n  $util.qr($ctx.stash.conditions.add({\n  \"id\": {\n      \"attributeExists\": true\n  }\n}))\n#end\n## End - key condition **\n#if( $args.condition )\n  $util.qr($ctx.stash.conditions.add($args.condition))\n#end\n## Start condition block **\n#if( $ctx.stash.conditions && $ctx.stash.conditions.size() != 0 )\n  #set( $mergedConditions = {\n  \"and\": $ctx.stash.conditions\n} )\n  #set( $Conditions = $util.parseJson($util.transform.toDynamoDBConditionExpression($mergedConditions)) )\n  #if( $Conditions.expressionValues && $Conditions.expressionValues.size() == 0 )\n    #set( $Conditions = {\n  \"expression\": $Conditions.expression,\n  \"expressionNames\": $Conditions.expressionNames\n} )\n  #end\n  ## End condition block **\n#end\n#set( $UpdateItem = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"UpdateItem\",\n  \"key\": $Key,\n  \"update\": $update\n} )\n#if( $Conditions )\n  #if( $keyConditionExprNames )\n    $util.qr($Conditions.expressionNames.putAll($keyConditionExprNames))\n  #end\n  $util.qr($UpdateItem.put(\"condition\", $Conditions))\n#end\n$util.toJson($UpdateItem)\n## [End] Mutation Update resolver. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n$util.qr($ctx.result.put(\"__operation\", \"Mutation\"))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-update-todo-task-data-resolver-fn/Resource"
+   }
+  },
+  "demomutationdeletetodotaskauth0functionDD3649CA": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationdeleteTodoTaskauth0Function",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"GetItem\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $key = {\n  \"id\":   $util.dynamodb.toDynamoDB($ctx.args.input.id)\n} )\n#end\n$util.qr($GetRequest.put(\"key\", $key))\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#set( $isAuthorized = false )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized )\n$util.unauthorized()\n#end\n$util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})\n## [End] Authorization Steps. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationdelete-todo-taskauth0-function/Resource"
+   }
+  },
+  "demomutationdeletetodotaskdataresolverfn6EC7E4C1": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "TodoTaskDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationDeleteTodoTaskDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Delete Request template. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n#set( $DeleteRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"DeleteItem\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $Key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $Key = {\n  \"id\":   $util.dynamodb.toDynamoDB($args.input.id)\n} )\n#end\n$util.qr($DeleteRequest.put(\"key\", $Key))\n## Begin - key condition **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyConditionExpr = {} )\n  #set( $keyConditionExprNames = {} )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyConditionExpr.put(\"keyCondition$velocityCount\", {\n  \"attributeExists\": true\n}))\n    $util.qr($keyConditionExprNames.put(\"#keyCondition$velocityCount\", \"$entry.key\"))\n  #end\n  $util.qr($ctx.stash.conditions.add($keyConditionExpr))\n#else\n  $util.qr($ctx.stash.conditions.add({\n  \"id\": {\n      \"attributeExists\": true\n  }\n}))\n#end\n## End - key condition **\n#if( $args.condition )\n  $util.qr($ctx.stash.conditions.add($args.condition))\n#end\n## Start condition block **\n#if( $ctx.stash.conditions && $ctx.stash.conditions.size() != 0 )\n  #set( $mergedConditions = {\n  \"and\": $ctx.stash.conditions\n} )\n  #set( $Conditions = $util.parseJson($util.transform.toDynamoDBConditionExpression($mergedConditions)) )\n  #if( $Conditions.expressionValues && $Conditions.expressionValues.size() == 0 )\n    #set( $Conditions = {\n  \"expression\": $Conditions.expression,\n  \"expressionNames\": $Conditions.expressionNames\n} )\n  #end\n  ## End condition block **\n#end\n#if( $Conditions )\n  #if( $keyConditionExprNames )\n    $util.qr($Conditions.expressionNames.putAll($keyConditionExprNames))\n  #end\n  $util.qr($DeleteRequest.put(\"condition\", $Conditions))\n#end\n$util.toJson($DeleteRequest)\n## [End] Delete Request template. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n$util.qr($ctx.result.put(\"__operation\", \"Mutation\"))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemotodotaskdatasource1DCB4AB9",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-delete-todo-task-data-resolver-fn/Resource"
+   }
+  },
+  "demosubscriptiononcreatetodotaskauth0function3370D7E1": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "SubscriptiononCreateTodoTaskauth0Function",
+    "RequestMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#set( $isAuthorized = false )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized )\n$util.unauthorized()\n#end\n$util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})\n## [End] Authorization Steps. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscriptionon-create-todo-taskauth0-function/Resource"
+   }
+  },
+  "demosubscriptiononcreatetodotaskdataresolverfnF10A94A2": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "SubscriptionOnCreateTodoTaskDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Subscription Request template. **\n$util.toJson({\n  \"version\": \"2018-05-29\",\n  \"payload\": {}\n})\n## [End] Subscription Request template. **",
+    "ResponseMappingTemplate": "## [Start] Subscription Response template. **\n$util.toJson(null)\n## [End] Subscription Response template. **"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-create-todo-task-data-resolver-fn/Resource"
+   }
+  },
+  "demoquerygetimagedataresolverfn375F499C": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QueryGetImageDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"Query\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $expression = \"\" )\n  #set( $expressionNames = {} )\n  #set( $expressionValues = {} )\n  #foreach( $item in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    #set( $expression = \"$expression#keyCount$velocityCount = :valueCount$velocityCount AND \" )\n    $util.qr($expressionNames.put(\"#keyCount$velocityCount\", $item.key))\n    $util.qr($expressionValues.put(\":valueCount$velocityCount\", $item.value))\n  #end\n  #set( $expression = $expression.replaceAll(\"AND $\", \"\") )\n  #set( $query = {\n  \"expression\": $expression,\n  \"expressionNames\": $expressionNames,\n  \"expressionValues\": $expressionValues\n} )\n#else\n  #set( $query = {\n  \"expression\": \"id = :id\",\n  \"expressionValues\": {\n      \":id\":     $util.parseJson($util.dynamodb.toDynamoDBJson($ctx.args.id))\n  }\n} )\n#end\n$util.qr($GetRequest.put(\"query\", $query))\n#if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n  $util.qr($GetRequest.put(\"filter\", $util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.stash.authFilter))))\n#end\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Get Response template. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#end\n#if( !$ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n  $util.toJson($ctx.result.items[0])\n#else\n  #if( $ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n$util.unauthorized()\n  #end\n  $util.toJson(null)\n#end\n## [End] Get Response template. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-get-image-data-resolver-fn/Resource"
+   }
+  },
+  "demoquerylistimagesdataresolverfn6C61E90D": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QueryListImagesDataResolverFn",
+    "RequestMappingTemplate": "## [Start] List Request. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n#set( $limit = $util.defaultIfNull($args.limit, 100) )\n#set( $ListRequest = {\n  \"version\": \"2018-05-29\",\n  \"limit\": $limit\n} )\n#if( $args.nextToken )\n  #set( $ListRequest.nextToken = $args.nextToken )\n#end\n#if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n  #set( $filter = $ctx.stash.authFilter )\n  #if( !$util.isNullOrEmpty($args.filter) )\n    #set( $filter = {\n  \"and\":   [$filter, $args.filter]\n} )\n  #end\n#else\n  #if( !$util.isNullOrEmpty($args.filter) )\n    #set( $filter = $args.filter )\n  #end\n#end\n#if( !$util.isNullOrEmpty($filter) )\n  #set( $filterExpression = $util.parseJson($util.transform.toDynamoDBFilterExpression($filter)) )\n  #if( $util.isNullOrEmpty($filterExpression) )\n    $util.error(\"Unable to process the filter expression\", \"Unrecognized Filter\")\n  #end\n  #if( !$util.isNullOrBlank($filterExpression.expression) )\n    #if( $filterExpression.expressionValues.size() == 0 )\n      $util.qr($filterExpression.remove(\"expressionValues\"))\n    #end\n    #set( $ListRequest.filter = $filterExpression )\n  #end\n#end\n#if( !$util.isNull($ctx.stash.modelQueryExpression) && !$util.isNullOrEmpty($ctx.stash.modelQueryExpression.expression) )\n  $util.qr($ListRequest.put(\"operation\", \"Query\"))\n  $util.qr($ListRequest.put(\"query\", $ctx.stash.modelQueryExpression))\n  #if( !$util.isNull($args.sortDirection) && $args.sortDirection == \"DESC\" )\n    #set( $ListRequest.scanIndexForward = false )\n  #else\n    #set( $ListRequest.scanIndexForward = true )\n  #end\n#else\n  $util.qr($ListRequest.put(\"operation\", \"Scan\"))\n#end\n#if( !$util.isNull($ctx.stash.metadata.index) )\n  #set( $ListRequest.IndexName = $ctx.stash.metadata.index )\n#end\n$util.toJson($ListRequest)\n## [End] List Request. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-list-images-data-resolver-fn/Resource"
+   }
+  },
+  "demomutationcreateimagedataresolverfnFF698A32": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationCreateImageDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Create Request template. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n## Set the default values to put request **\n#set( $mergedValues = $util.defaultIfNull($ctx.stash.defaultValues, {}) )\n## copy the values from input **\n$util.qr($mergedValues.putAll($util.defaultIfNull($args.input, {})))\n## set the typename **\n$util.qr($mergedValues.put(\"__typename\", \"Image\"))\n#set( $PutObject = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"PutItem\",\n  \"attributeValues\":   $util.dynamodb.toMapValues($mergedValues),\n  \"condition\": $condition\n} )\n#if( $args.condition )\n  $util.qr($ctx.stash.conditions.add($args.condition))\n#end\n## Begin - key condition **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyConditionExpr = {} )\n  #set( $keyConditionExprNames = {} )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyConditionExpr.put(\"keyCondition$velocityCount\", {\n  \"attributeExists\": false\n}))\n    $util.qr($keyConditionExprNames.put(\"#keyCondition$velocityCount\", \"$entry.key\"))\n  #end\n  $util.qr($ctx.stash.conditions.add($keyConditionExpr))\n#else\n  $util.qr($ctx.stash.conditions.add({\n  \"id\": {\n      \"attributeExists\": false\n  }\n}))\n#end\n## End - key condition **\n## Start condition block **\n#if( $ctx.stash.conditions && $ctx.stash.conditions.size() != 0 )\n  #set( $mergedConditions = {\n  \"and\": $ctx.stash.conditions\n} )\n  #set( $Conditions = $util.parseJson($util.transform.toDynamoDBConditionExpression($mergedConditions)) )\n  #if( $Conditions.expressionValues && $Conditions.expressionValues.size() == 0 )\n    #set( $Conditions = {\n  \"expression\": $Conditions.expression,\n  \"expressionNames\": $Conditions.expressionNames\n} )\n  #end\n  ## End condition block **\n#end\n#if( $Conditions )\n  #if( $keyConditionExprNames )\n    $util.qr($Conditions.expressionNames.putAll($keyConditionExprNames))\n  #end\n  $util.qr($PutObject.put(\"condition\", $Conditions))\n#end\n#if( $ctx.stash.metadata.modelObjectKey )\n  $util.qr($PutObject.put(\"key\", $ctx.stash.metadata.modelObjectKey))\n#else\n  #set( $Key = {\n  \"id\":   $util.dynamodb.toDynamoDB($mergedValues.id)\n} )\n  $util.qr($PutObject.put(\"key\", $Key))\n#end\n$util.toJson($PutObject)\n## [End] Create Request template. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n$util.qr($ctx.result.put(\"__operation\", \"Mutation\"))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-create-image-data-resolver-fn/Resource"
+   }
+  },
+  "demomutationupdateimageauth0function03192D1A": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationupdateImageauth0Function",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"GetItem\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $key = {\n  \"id\":   $util.dynamodb.toDynamoDB($ctx.args.input.id)\n} )\n#end\n$util.qr($GetRequest.put(\"key\", $key))\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#end\n#set( $inputFields = $util.parseJson($util.toJson($ctx.args.input.keySet())) )\n#set( $isAuthorized = false )\n#set( $allowedFields = [] )\n#set( $nullAllowedFields = [] )\n#set( $deniedFields = {} )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized && $allowedFields.isEmpty() && $nullAllowedFields.isEmpty() )\n$util.unauthorized()\n#end\n#if( !$isAuthorized )\n  #foreach( $entry in $util.map.copyAndRetainAllKeys($ctx.args.input, $inputFields).entrySet() )\n    #if( $util.isNull($entry.value) && !$nullAllowedFields.contains($entry.key) )\n      $util.qr($deniedFields.put($entry.key, \"\"))\n    #end\n  #end\n  #foreach( $deniedField in $util.list.copyAndRemoveAll($inputFields, $allowedFields) )\n    $util.qr($deniedFields.put($deniedField, \"\"))\n  #end\n#end\n#if( $deniedFields.keySet().size() > 0 )\n  $util.error(\"Unauthorized on ${deniedFields.keySet()}\", \"Unauthorized\")\n#end\n$util.toJson({})\n## [End] Authorization Steps. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationupdate-imageauth0-function/Resource"
+   }
+  },
+  "demomutationupdateimagedataresolverfnE86BCA18": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationUpdateImageDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Mutation Update resolver. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n## Set the default values to put request **\n#set( $mergedValues = $util.defaultIfNull($ctx.stash.defaultValues, {}) )\n## copy the values from input **\n$util.qr($mergedValues.putAll($util.defaultIfNull($args.input, {})))\n## set the typename **\n## Initialize the vars for creating ddb expression **\n#set( $expNames = {} )\n#set( $expValues = {} )\n#set( $expSet = {} )\n#set( $expAdd = {} )\n#set( $expRemove = [] )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $Key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $Key = {\n  \"id\":   $util.dynamodb.toDynamoDB($args.input.id)\n} )\n#end\n## Model key **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyFields = [] )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyFields.add(\"$entry.key\"))\n  #end\n#else\n  #set( $keyFields = [\"id\"] )\n#end\n#foreach( $entry in $util.map.copyAndRemoveAllKeys($mergedValues, $keyFields).entrySet() )\n  #if( !$util.isNull($ctx.stash.metadata.dynamodbNameOverrideMap) && $ctx.stash.metadata.dynamodbNameOverrideMap.containsKey(\"$entry.key\") )\n    #set( $entryKeyAttributeName = $ctx.stash.metadata.dynamodbNameOverrideMap.get(\"$entry.key\") )\n  #else\n    #set( $entryKeyAttributeName = $entry.key )\n  #end\n  #if( $util.isNull($entry.value) )\n    #set( $discard = $expRemove.add(\"#$entryKeyAttributeName\") )\n    $util.qr($expNames.put(\"#$entryKeyAttributeName\", \"$entry.key\"))\n  #else\n    $util.qr($expSet.put(\"#$entryKeyAttributeName\", \":$entryKeyAttributeName\"))\n    $util.qr($expNames.put(\"#$entryKeyAttributeName\", \"$entry.key\"))\n    $util.qr($expValues.put(\":$entryKeyAttributeName\", $util.dynamodb.toDynamoDB($entry.value)))\n  #end\n#end\n#set( $expression = \"\" )\n#if( !$expSet.isEmpty() )\n  #set( $expression = \"SET\" )\n  #foreach( $entry in $expSet.entrySet() )\n    #set( $expression = \"$expression $entry.key = $entry.value\" )\n    #if( $foreach.hasNext() )\n      #set( $expression = \"$expression,\" )\n    #end\n  #end\n#end\n#if( !$expAdd.isEmpty() )\n  #set( $expression = \"$expression ADD\" )\n  #foreach( $entry in $expAdd.entrySet() )\n    #set( $expression = \"$expression $entry.key $entry.value\" )\n    #if( $foreach.hasNext() )\n      #set( $expression = \"$expression,\" )\n    #end\n  #end\n#end\n#if( !$expRemove.isEmpty() )\n  #set( $expression = \"$expression REMOVE\" )\n  #foreach( $entry in $expRemove )\n    #set( $expression = \"$expression $entry\" )\n    #if( $foreach.hasNext() )\n      #set( $expression = \"$expression,\" )\n    #end\n  #end\n#end\n#set( $update = {} )\n$util.qr($update.put(\"expression\", \"$expression\"))\n#if( !$expNames.isEmpty() )\n  $util.qr($update.put(\"expressionNames\", $expNames))\n#end\n#if( !$expValues.isEmpty() )\n  $util.qr($update.put(\"expressionValues\", $expValues))\n#end\n## Begin - key condition **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyConditionExpr = {} )\n  #set( $keyConditionExprNames = {} )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyConditionExpr.put(\"keyCondition$velocityCount\", {\n  \"attributeExists\": true\n}))\n    $util.qr($keyConditionExprNames.put(\"#keyCondition$velocityCount\", \"$entry.key\"))\n  #end\n  $util.qr($ctx.stash.conditions.add($keyConditionExpr))\n#else\n  $util.qr($ctx.stash.conditions.add({\n  \"id\": {\n      \"attributeExists\": true\n  }\n}))\n#end\n## End - key condition **\n#if( $args.condition )\n  $util.qr($ctx.stash.conditions.add($args.condition))\n#end\n## Start condition block **\n#if( $ctx.stash.conditions && $ctx.stash.conditions.size() != 0 )\n  #set( $mergedConditions = {\n  \"and\": $ctx.stash.conditions\n} )\n  #set( $Conditions = $util.parseJson($util.transform.toDynamoDBConditionExpression($mergedConditions)) )\n  #if( $Conditions.expressionValues && $Conditions.expressionValues.size() == 0 )\n    #set( $Conditions = {\n  \"expression\": $Conditions.expression,\n  \"expressionNames\": $Conditions.expressionNames\n} )\n  #end\n  ## End condition block **\n#end\n#set( $UpdateItem = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"UpdateItem\",\n  \"key\": $Key,\n  \"update\": $update\n} )\n#if( $Conditions )\n  #if( $keyConditionExprNames )\n    $util.qr($Conditions.expressionNames.putAll($keyConditionExprNames))\n  #end\n  $util.qr($UpdateItem.put(\"condition\", $Conditions))\n#end\n$util.toJson($UpdateItem)\n## [End] Mutation Update resolver. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n$util.qr($ctx.result.put(\"__operation\", \"Mutation\"))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-update-image-data-resolver-fn/Resource"
+   }
+  },
+  "demomutationdeleteimageauth0function44AE95D7": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationdeleteImageauth0Function",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"GetItem\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $key = {\n  \"id\":   $util.dynamodb.toDynamoDB($ctx.args.input.id)\n} )\n#end\n$util.qr($GetRequest.put(\"key\", $key))\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#set( $isAuthorized = false )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized )\n$util.unauthorized()\n#end\n$util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})\n## [End] Authorization Steps. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutationdelete-imageauth0-function/Resource"
+   }
+  },
+  "demomutationdeleteimagedataresolverfn06212B3A": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ImageDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "MutationDeleteImageDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Delete Request template. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n#set( $DeleteRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"DeleteItem\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $Key = $ctx.stash.metadata.modelObjectKey )\n#else\n  #set( $Key = {\n  \"id\":   $util.dynamodb.toDynamoDB($args.input.id)\n} )\n#end\n$util.qr($DeleteRequest.put(\"key\", $Key))\n## Begin - key condition **\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $keyConditionExpr = {} )\n  #set( $keyConditionExprNames = {} )\n  #foreach( $entry in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    $util.qr($keyConditionExpr.put(\"keyCondition$velocityCount\", {\n  \"attributeExists\": true\n}))\n    $util.qr($keyConditionExprNames.put(\"#keyCondition$velocityCount\", \"$entry.key\"))\n  #end\n  $util.qr($ctx.stash.conditions.add($keyConditionExpr))\n#else\n  $util.qr($ctx.stash.conditions.add({\n  \"id\": {\n      \"attributeExists\": true\n  }\n}))\n#end\n## End - key condition **\n#if( $args.condition )\n  $util.qr($ctx.stash.conditions.add($args.condition))\n#end\n## Start condition block **\n#if( $ctx.stash.conditions && $ctx.stash.conditions.size() != 0 )\n  #set( $mergedConditions = {\n  \"and\": $ctx.stash.conditions\n} )\n  #set( $Conditions = $util.parseJson($util.transform.toDynamoDBConditionExpression($mergedConditions)) )\n  #if( $Conditions.expressionValues && $Conditions.expressionValues.size() == 0 )\n    #set( $Conditions = {\n  \"expression\": $Conditions.expression,\n  \"expressionNames\": $Conditions.expressionNames\n} )\n  #end\n  ## End condition block **\n#end\n#if( $Conditions )\n  #if( $keyConditionExprNames )\n    $util.qr($Conditions.expressionNames.putAll($keyConditionExprNames))\n  #end\n  $util.qr($DeleteRequest.put(\"condition\", $Conditions))\n#end\n$util.toJson($DeleteRequest)\n## [End] Delete Request template. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n$util.qr($ctx.result.put(\"__operation\", \"Mutation\"))\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemoimagedatasourceFE705BB5",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-delete-image-data-resolver-fn/Resource"
+   }
+  },
+  "demoquerygetsharedwithdataresolverfn9B666666": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "SharedWithDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QueryGetSharedWithDataResolverFn",
+    "RequestMappingTemplate": "## [Start] Get Request template. **\n#set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"Query\"\n} )\n#if( $ctx.stash.metadata.modelObjectKey )\n  #set( $expression = \"\" )\n  #set( $expressionNames = {} )\n  #set( $expressionValues = {} )\n  #foreach( $item in $ctx.stash.metadata.modelObjectKey.entrySet() )\n    #set( $expression = \"$expression#keyCount$velocityCount = :valueCount$velocityCount AND \" )\n    $util.qr($expressionNames.put(\"#keyCount$velocityCount\", $item.key))\n    $util.qr($expressionValues.put(\":valueCount$velocityCount\", $item.value))\n  #end\n  #set( $expression = $expression.replaceAll(\"AND $\", \"\") )\n  #set( $query = {\n  \"expression\": $expression,\n  \"expressionNames\": $expressionNames,\n  \"expressionValues\": $expressionValues\n} )\n#else\n  #set( $query = {\n  \"expression\": \"id = :id\",\n  \"expressionValues\": {\n      \":id\":     $util.parseJson($util.dynamodb.toDynamoDBJson($ctx.args.id))\n  }\n} )\n#end\n$util.qr($GetRequest.put(\"query\", $query))\n#if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n  $util.qr($GetRequest.put(\"filter\", $util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.stash.authFilter))))\n#end\n$util.toJson($GetRequest)\n## [End] Get Request template. **",
+    "ResponseMappingTemplate": "## [Start] Get Response template. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#end\n#if( !$ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n  $util.toJson($ctx.result.items[0])\n#else\n  #if( $ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n$util.unauthorized()\n  #end\n  $util.toJson(null)\n#end\n## [End] Get Response template. **"
+   },
+   "DependsOn": [
+    "demographqlapidemosharedwithdatasource2EF7ACB0",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-get-shared-with-data-resolver-fn/Resource"
+   }
+  },
+  "demoquerylistsharedwithsdataresolverfn1AD9AE81": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "SharedWithDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "QueryListSharedWithsDataResolverFn",
+    "RequestMappingTemplate": "## [Start] List Request. **\n#set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n#set( $limit = $util.defaultIfNull($args.limit, 100) )\n#set( $ListRequest = {\n  \"version\": \"2018-05-29\",\n  \"limit\": $limit\n} )\n#if( $args.nextToken )\n  #set( $ListRequest.nextToken = $args.nextToken )\n#end\n#if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n  #set( $filter = $ctx.stash.authFilter )\n  #if( !$util.isNullOrEmpty($args.filter) )\n    #set( $filter = {\n  \"and\":   [$filter, $args.filter]\n} )\n  #end\n#else\n  #if( !$util.isNullOrEmpty($args.filter) )\n    #set( $filter = $args.filter )\n  #end\n#end\n#if( !$util.isNullOrEmpty($filter) )\n  #set( $filterExpression = $util.parseJson($util.transform.toDynamoDBFilterExpression($filter)) )\n  #if( $util.isNullOrEmpty($filterExpression) )\n    $util.error(\"Unable to process the filter expression\", \"Unrecognized Filter\")\n  #end\n  #if( !$util.isNullOrBlank($filterExpression.expression) )\n    #if( $filterExpression.expressionValues.size() == 0 )\n      $util.qr($filterExpression.remove(\"expressionValues\"))\n    #end\n    #set( $ListRequest.filter = $filterExpression )\n  #end\n#end\n#if( !$util.isNull($ctx.stash.modelQueryExpression) && !$util.isNullOrEmpty($ctx.stash.modelQueryExpression.expression) )\n  $util.qr($ListRequest.put(\"operation\", \"Query\"))\n  $util.qr($ListRequest.put(\"query\", $ctx.stash.modelQueryExpression))\n  #if( !$util.isNull($args.sortDirection) && $args.sortDirection == \"DESC\" )\n    #set( $ListRequest.scanIndexForward = false )\n  #else\n    #set( $ListRequest.scanIndexForward = true )\n  #end\n#else\n  $util.qr($ListRequest.put(\"operation\", \"Scan\"))\n#end\n#if( !$util.isNull($ctx.stash.metadata.index) )\n  #set( $ListRequest.IndexName = $ctx.stash.metadata.index )\n#end\n$util.toJson($ListRequest)\n## [End] List Request. **",
+    "ResponseMappingTemplate": "## [Start] ResponseTemplate. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#else\n  $util.toJson($ctx.result)\n#end\n## [End] ResponseTemplate. **"
+   },
+   "DependsOn": [
+    "demographqlapidemosharedwithdatasource2EF7ACB0",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-list-shared-withs-data-resolver-fn/Resource"
+   }
+  },
+  "demoinvokesharetasklambdadatasource09FA16DE": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "ShareTaskLambdaDataSource",
+    "FunctionVersion": "2018-05-29",
+    "Name": "InvokeShareTaskLambdaDataSource",
+    "RequestMappingTemplate": "## [Start] Invoke AWS Lambda data source: ShareTaskLambdaDataSource. **\n{\n  \"version\": \"2018-05-29\",\n  \"operation\": \"Invoke\",\n  \"payload\": {\n      \"typeName\": $util.toJson($ctx.stash.get(\"typeName\")),\n      \"fieldName\": $util.toJson($ctx.stash.get(\"fieldName\")),\n      \"arguments\": $util.toJson($ctx.arguments),\n      \"identity\": $util.toJson($ctx.identity),\n      \"source\": $util.toJson($ctx.source),\n      \"request\": $util.toJson($ctx.request),\n      \"prev\": $util.toJson($ctx.prev)\n  }\n}\n## [End] Invoke AWS Lambda data source: ShareTaskLambdaDataSource. **",
+    "ResponseMappingTemplate": "## [Start] Handle error or return result. **\n#if( $ctx.error )\n  $util.error($ctx.error.message, $ctx.error.type)\n#end\n$util.toJson($ctx.result)\n## [End] Handle error or return result. **"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50",
+    "demosharetasklambdadatasourceBC81E443"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-invoke-share-task-lambda-data-source/Resource"
+   }
+  },
+  "demotodotaskimageauth0function65A4EB65": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "TodoTaskimageauth0Function",
+    "RequestMappingTemplate": "## [Start] Authorization Steps. **\n$util.qr($ctx.stash.put(\"hasAuth\", true))\n#set( $isAuthorized = false )\n#if( $util.authType() == \"API Key Authorization\" )\n  #set( $isAuthorized = true )\n#end\n#if( !$isAuthorized && $util.isNull($ctx.stash.authFilter) )\n$util.unauthorized()\n#end\n$util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})\n## [End] Authorization Steps. **",
+    "ResponseMappingTemplate": "$util.toJson({})"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-todo-taskimageauth0-function/Resource"
+   }
+  },
+  "demotodotaskimagedataresolverfnDCD4A73B": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "TodoTaskImageDataResolverFn",
+    "RequestMappingTemplate": "#if( $ctx.source.deniedField )\n  #return($util.toJson(null))\n#end\n#if( $util.isNull($ctx.source.imageId) )\n  #return\n#else\n  #set( $GetRequest = {\n  \"version\": \"2018-05-29\",\n  \"operation\": \"Query\"\n} )\n  $util.qr($GetRequest.put(\"query\", {\n  \"expression\": \"#partitionKey = :partitionValue\",\n  \"expressionNames\": {\n      \"#partitionKey\": \"id\"\n  },\n  \"expressionValues\": {\n      \":partitionValue\": $util.parseJson($util.dynamodb.toDynamoDBJson($util.defaultIfNullOrBlank($ctx.source.imageId, \"___xamznone____\")))\n  }\n}))\n  #if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n    $util.qr($GetRequest.put(\"filter\", $util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.stash.authFilter))))\n  #end\n  $util.toJson($GetRequest)\n#end",
+    "ResponseMappingTemplate": "#if( $ctx.error )\n$util.error($ctx.error.message, $ctx.error.type)\n#else\n  #if( !$ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n    $util.toJson($ctx.result.items[0])\n  #else\n    #if( $ctx.result.items.isEmpty() && $ctx.result.scannedCount == 1 )\n$util.unauthorized()\n    #end\n    $util.toJson(null)\n  #end\n#end"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-todo-task-image-data-resolver-fn/Resource"
+   }
+  },
+  "demotodotasksharedwithdataresolverfn9C64F0FA": {
+   "Type": "AWS::AppSync::FunctionConfiguration",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NONE",
+    "FunctionVersion": "2018-05-29",
+    "Name": "TodoTaskSharedWithDataResolverFn",
+    "RequestMappingTemplate": "#if( $ctx.source.deniedField )\n  #return($util.toJson(null))\n#end\n#if( $util.isNull($ctx.source.id) )\n  #set( $result = {\n  \"items\":   []\n} )\n  #return($result)\n#else\n  #set( $limit = $util.defaultIfNull($context.args.limit, 100) )\n  #set( $query = {\n  \"expression\": \"#partitionKey = :partitionKey\",\n  \"expressionNames\": {\n      \"#partitionKey\": \"todoTaskSharedWithId\"\n  },\n  \"expressionValues\": {\n      \":partitionKey\": $util.dynamodb.toDynamoDB($context.source.id)\n  }\n} )\n  #set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )\n  #if( !$util.isNullOrEmpty($ctx.stash.authFilter) )\n    #set( $filter = $ctx.stash.authFilter )\n    #if( !$util.isNullOrEmpty($args.filter) )\n      #set( $filter = {\n  \"and\":   [$filter, $args.filter]\n} )\n    #end\n  #else\n    #if( !$util.isNullOrEmpty($args.filter) )\n      #set( $filter = $args.filter )\n    #end\n  #end\n  #if( !$util.isNullOrEmpty($filter) )\n    #set( $filterExpression = $util.parseJson($util.transform.toDynamoDBFilterExpression($filter)) )\n    #if( !$util.isNullOrBlank($filterExpression.expression) )\n      #if( $filterExpression.expressionValues.size() == 0 )\n        $util.qr($filterExpression.remove(\"expressionValues\"))\n      #end\n      #set( $filter = $filterExpression )\n    #end\n  #end\n{\n      \"version\": \"2018-05-29\",\n      \"operation\": \"Query\",\n      \"query\":     $util.toJson($query),\n      \"scanIndexForward\":     #if( $context.args.sortDirection )\n      #if( $context.args.sortDirection == \"ASC\" )\ntrue\n      #else\nfalse\n      #end\n    #else\ntrue\n    #end,\n      \"filter\":     #if( $filter )\n$util.toJson($filter)\n    #else\nnull\n    #end,\n      \"limit\": $limit,\n      \"nextToken\":     #if( $context.args.nextToken )\n$util.toJson($context.args.nextToken)\n    #else\nnull\n    #end,\n      \"index\": \"gsi-TodoTask.sharedWith\"\n  }\n#end",
+    "ResponseMappingTemplate": "#if( $ctx.error )\n$util.error($ctx.error.message, $ctx.error.type)\n#else\n  #if( !$result )\n    #set( $result = $ctx.result )\n  #end\n  $util.toJson($result)\n#end"
+   },
+   "DependsOn": [
+    "demographqlapiNONED9DC3D4E",
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-todo-task-shared-with-data-resolver-fn/Resource"
+   }
+  },
+  "demoquerygettodotaskresolverEC0D7051": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodoTask",
+    "TypeName": "Query",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskauth0function201FA8B7",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskdataresolverfnE6BF4BF8",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-todo-task-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-get-todo-task-resolver/Resource"
+   }
+  },
+  "demoquerylisttodotasksresolver3C31F9F3": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "listTodoTasks",
+    "TypeName": "Query",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskauth0function201FA8B7",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerylisttodotasksdataresolverfnF2669A16",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"listTodoTasks\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-todo-task-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-list-todo-tasks-resolver/Resource"
+   }
+  },
+  "demomutationcreatetodotaskresolver977257A9": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "createTodoTask",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demomutationcreatetodotaskinit0function3E1EA1CF",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationcreatetodotaskauth0functionF9B56BDD",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationcreatetodotaskdataresolverfnB0CBE727",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"createTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-todo-task-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-create-todo-task-resolver/Resource"
+   }
+  },
+  "demomutationupdatetodotaskresolverF85D4BCA": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "updateTodoTask",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demomutationupdatetodotaskinit0function3793280E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationupdatetodotaskauth0function8427D4CB",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationupdatetodotaskdataresolverfn10797A29",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"updateTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-todo-task-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-update-todo-task-resolver/Resource"
+   }
+  },
+  "demomutationdeletetodotaskresolver6F2FAF2D": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "deleteTodoTask",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demomutationdeletetodotaskauth0functionDD3649CA",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationdeletetodotaskdataresolverfn6EC7E4C1",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"deleteTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-todo-task-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-delete-todo-task-resolver/Resource"
+   }
+  },
+  "demosubscriptiononcreatetodotaskresolver07C6652B": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "onCreateTodoTask",
+    "TypeName": "Subscription",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demosubscriptiononcreatetodotaskauth0function3370D7E1",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demosubscriptiononcreatetodotaskdataresolverfnF10A94A2",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onCreateTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-create-todo-task-resolver/Resource"
+   }
+  },
+  "demosubscriptiononupdatetodotaskresolver2D814CB2": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "onUpdateTodoTask",
+    "TypeName": "Subscription",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demosubscriptiononcreatetodotaskauth0function3370D7E1",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demosubscriptiononcreatetodotaskdataresolverfnF10A94A2",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onUpdateTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-update-todo-task-resolver/Resource"
+   }
+  },
+  "demosubscriptionondeletetodotaskresolverAD3F4170": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "onDeleteTodoTask",
+    "TypeName": "Subscription",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demosubscriptiononcreatetodotaskauth0function3370D7E1",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demoquerygettodotaskpostauth0function72EBEE8E",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demosubscriptiononcreatetodotaskdataresolverfnF10A94A2",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onDeleteTodoTask\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-delete-todo-task-resolver/Resource"
+   }
+  },
+  "demoquerygetimageresolver1361F749": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getImage",
+    "TypeName": "Query",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoquerygetimagedataresolverfn375F499C",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-image-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-get-image-resolver/Resource"
+   }
+  },
+  "demoquerylistimagesresolverCF05DACA": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "listImages",
+    "TypeName": "Query",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoquerylistimagesdataresolverfn6C61E90D",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"listImages\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-image-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-list-images-resolver/Resource"
+   }
+  },
+  "demomutationcreateimageresolverD035BB7C": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "createImage",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demomutationcreateimagedataresolverfnFF698A32",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"createImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-image-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-create-image-resolver/Resource"
+   }
+  },
+  "demomutationupdateimageresolverC70D52AC": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "updateImage",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demomutationupdateimageauth0function03192D1A",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationupdateimagedataresolverfnE86BCA18",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"updateImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-image-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-update-image-resolver/Resource"
+   }
+  },
+  "demomutationdeleteimageresolver5DA22A44": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "deleteImage",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demomutationdeleteimageauth0function44AE95D7",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demomutationdeleteimagedataresolverfn06212B3A",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"deleteImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-image-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-delete-image-resolver/Resource"
+   }
+  },
+  "demosubscriptiononcreateimageresolver9C885424": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "onCreateImage",
+    "TypeName": "Subscription",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": []
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onCreateImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-create-image-resolver/Resource"
+   }
+  },
+  "demosubscriptiononupdateimageresolverF76C2624": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "onUpdateImage",
+    "TypeName": "Subscription",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": []
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onUpdateImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-update-image-resolver/Resource"
+   }
+  },
+  "demosubscriptionondeleteimageresolverF7752975": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "onDeleteImage",
+    "TypeName": "Subscription",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": []
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onDeleteImage\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-subscription-on-delete-image-resolver/Resource"
+   }
+  },
+  "demoquerygetsharedwithresolver11A2CBEB": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getSharedWith",
+    "TypeName": "Query",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoquerygetsharedwithdataresolverfn9B666666",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getSharedWith\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-shared-with-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-get-shared-with-resolver/Resource"
+   }
+  },
+  "demoquerylistsharedwithsresolver1F4EBE5D": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "listSharedWiths",
+    "TypeName": "Query",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoquerylistsharedwithsdataresolverfn1AD9AE81",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"listSharedWiths\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-shared-with-table\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-query-list-shared-withs-resolver/Resource"
+   }
+  },
+  "demomutationsharetaskresolver7CF74D97": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "shareTask",
+    "TypeName": "Mutation",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demoinvokesharetasklambdadatasource09FA16DE",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": "## [Start] Stash resolver specific context.. **\n$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"shareTask\"))\n{}\n## [End] Stash resolver specific context.. **",
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-mutation-share-task-resolver/Resource"
+   }
+  },
+  "demotodotaskimageresolver8E699E01": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "image",
+    "TypeName": "TodoTask",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demotodotaskimageauth0function65A4EB65",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demotodotaskimagedataresolverfnDCD4A73B",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"TodoTask\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"image\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-referencetotransformerrootstack-image-nested-stack-image-nested-stack-resource64-de1-ec9-outputstransformerrootstack-image-image-table573568-d3-ref\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-todo-task-image-resolver/Resource"
+   }
+  },
+  "demotodotasksharedwithresolverF987B42B": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "demographqlapiDA442B10",
+      "ApiId"
+     ]
+    },
+    "FieldName": "sharedWith",
+    "TypeName": "TodoTask",
+    "Kind": "PIPELINE",
+    "PipelineConfig": {
+     "Functions": [
+      {
+       "Fn::GetAtt": [
+        "demotodotaskimageauth0function65A4EB65",
+        "FunctionId"
+       ]
+      },
+      {
+       "Fn::GetAtt": [
+        "demotodotasksharedwithdataresolverfn9C64F0FA",
+        "FunctionId"
+       ]
+      }
+     ]
+    },
+    "RequestMappingTemplate": {
+     "Fn::Join": [
+      "",
+      [
+       "$util.qr($ctx.stash.put(\"typeName\", \"TodoTask\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"sharedWith\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+       {
+        "Fn::GetAtt": [
+         "demographqlapiDA442B10",
+         "ApiId"
+        ]
+       },
+       "\"))\n$util.qr($ctx.stash.put(\"tableName\", \"demo-referencetotransformerrootstack-shared-with-nested-stack-shared-with-nested-stack-resource-ca833-e8-e-outputstransformerrootstack-shared-with-shared-with-table8942-f526-ref\"))\n$util.toJson({})"
+      ]
+     ]
+    },
+    "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+   },
+   "DependsOn": [
+    "demographqlapiSchemaD6A25D50"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/demo-todo-task-shared-with-resolver/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/01Qy27CMBD8Fu6OgRap10JReyiiLekdbewlGBw79YMKWfn32g6hOe3OPkYz80AXcxpmE/i1BePnQoqKhi1ah7x0wM4kLvYB2tZeFaPh5aDeDLTHr82yFeQfleyIDaRBnL/jNXVrcFBqbxgm9OoVc0KrF60OovYGEkiLHVotL2g6IqChYadlvs/1U0vBMlnfdcQiM+hsAwpqNDSUGaeLvusIvypoNI82vqHquXLTEQlNxYGGQcpYVmR+3IO1kZsuU4mYrjw7o1uBjc9J5uDlw7vWO5LvYkq1UPXgZDiJNrnoiWcFyPYIdDZ5vqU8TfWW6W0ZcpA/MsW61QpH4a2zoXU1Gm2yk9Fg2ZPdnd1D7YjSHOnJTi/zBZ0/RRUnK0RhvHKiQbrr6x9YropIBwIAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "demo-stack/demo-appsync/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "demoapikeysecretname": {
+   "Value": "demo-api-key-secret-name",
+   "Export": {
+    "Name": "demo-api-key-secret-name"
+   }
+  },
+  "demographqlurl": {
+   "Value": {
+    "Fn::GetAtt": [
+     "demographqlapiDA442B10",
+     "GraphQLUrl"
+    ]
+   },
+   "Export": {
+    "Name": "demo-graphql-url"
+   }
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-2"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

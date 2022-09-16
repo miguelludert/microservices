@@ -7,35 +7,18 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2019",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@miguelludert/appsync": [
-        "packages/appsync/src/index.ts"
-      ],
-      "@miguelludert/gql-client": [
-        "packages/gql-client/src/index.ts"
-      ],
-      "@miguelludert/sample-microservice": [
-        "packages/sample-microservice/src/index.ts"
-      ]
-    },
-    "types": [
-      "node",
-      "jest"
-    ]
+      "@microservices/demo-todo-ms": ["packages/demo-todo-ms/src/index.ts"],
+      "@miguelludert/appsync": ["packages/appsync/src/index.ts"],
+      "@miguelludert/ms-client": ["packages/ms-client/src/index.ts"]
+    }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

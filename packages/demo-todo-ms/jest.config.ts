@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'appsync',
+  displayName: 'demo-todo-ms',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -12,5 +12,5 @@ export default {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/appsync',
+  coverageDirectory: '../../coverage/packages/demo-todo-ms',
 };

@@ -1,8 +1,0 @@
-{
-  "name": "@miguelludert/sample-microservice",
-  "version": "0.0.1",
-  "type": "commonjs",
-  "dependencies": {
-    "amplify-cli-core": "^3.0.0"
-  }
-}

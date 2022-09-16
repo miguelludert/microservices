@@ -1,20 +1,20 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/appsync/src",
+  "sourceRoot": "packages/ms-client/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/appsync/**/*.ts"]
+        "lintFilePatterns": ["packages/ms-client/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/appsync"],
+      "outputs": ["coverage/packages/ms-client"],
       "options": {
-        "jestConfig": "packages/appsync/jest.config.ts",
+        "jestConfig": "packages/ms-client/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -22,11 +22,11 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/appsync",
-        "tsConfig": "packages/appsync/tsconfig.lib.json",
-        "packageJson": "packages/appsync/package.json",
-        "main": "packages/appsync/src/index.ts",
-        "assets": ["packages/appsync/*.md"]
+        "outputPath": "dist/packages/ms-client",
+        "tsConfig": "packages/ms-client/tsconfig.lib.json",
+        "packageJson": "packages/ms-client/package.json",
+        "main": "packages/ms-client/src/index.ts",
+        "assets": ["packages/ms-client/*.md"]
       }
     }
   },

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/functions/share-task/index.ts"],
+  "sourcesContent": ["export function handler(event : any) { \n    console.info(`EVENT: ${event}`);\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,SAAS,QAAQ,OAAa;AACjC,UAAQ,KAAK,UAAU,OAAO;AAClC;",
+  "names": []
+}

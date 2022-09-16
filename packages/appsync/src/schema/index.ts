@@ -63,9 +63,8 @@ export const transformSchema = (
     transformers,
     featureFlags :{
       getBoolean: (value: string, defaultValue: boolean): boolean => defaultValue,
-      getString : (value: string, defaultValue: string): string => defaultValue,
       getNumber : (value: string, defaultValue: number): number => defaultValue,
-      getObject : (value: string, defaultValue: any): any => defaultValue,
+      getObject : (value: string, defaultValue: any): any => defaultValue
     }
   });
 

@@ -3,7 +3,7 @@
   "version": 2,
   "projects": {
     "appsync": "packages/appsync",
-    "gql-client": "packages/gql-client",
-    "sample-microservice": "packages/sample-microservice"
+    "demo-todo-ms": "packages/demo-todo-ms",
+    "ms-client": "packages/ms-client"
   }
 }

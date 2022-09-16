@@ -10,6 +10,7 @@ import { tmpNameSync } from 'tmp';
 import { writeFileSync } from 'fs';
 import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import { cfnOutputs } from '../utils/cfn-outputs';
+import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 
 
 export const getSecretName = (props : AppsyncSchemaTransformerProps) => props.namingConvention('api-key-secret-name');
@@ -36,14 +37,20 @@ export const createApi = (
   };
   const result = new aws_appsync.GraphqlApi(scope, name, apiProps);
 
+  let secretOutput : any = {};
   if(props.authorizationConfig.some(s => s.authType === AuthType.ApiKey)) {
+    const secretName = getSecretName(props);
+    secretOutput = {
+      apiKeySecretName : secretName
+    };
     new Secret(scope, 'api-key-secret', {
-      secretName : getSecretName(props),
+      secretName,
       secretStringValue : new SecretValue(result.apiKey!)
     });
   }
 
   cfnOutputs(scope, {
+    ...secretOutput,
     graphqlUrl: result.graphqlUrl,
   }, props.namingConvention);
 
