@@ -1,0 +1,44 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/gql-client/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/gql-client/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/packages/gql-client"
+      ],
+      "options": {
+        "jestConfig": "packages/gql-client/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/packages/gql-client",
+        "tsConfig": "packages/gql-client/tsconfig.lib.json",
+        "packageJson": "packages/gql-client/package.json",
+        "main": "packages/gql-client/src/index.ts",
+        "assets": [
+          "packages/gql-client/*.md"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

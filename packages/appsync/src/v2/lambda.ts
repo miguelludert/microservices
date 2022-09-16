@@ -17,6 +17,7 @@ import * as esbuild from 'esbuild';
 import { existsSync, mkdir, mkdirSync } from 'fs';
 import { Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { ifError } from 'assert';
+import { getGraphqlUrlOutputName, getSecretName } from './createApi';
 
 // TODO: this is a strong candidate for migration to new transformer
 
@@ -63,20 +64,19 @@ export function createLambdaFunction(scope : Construct, props: AppsyncSchemaTran
   const functionOrEntryPoint = props.functionProps[functionPropKey];
 
   if(typeof(functionOrEntryPoint) === "string") {
-    const defaultProps = {
-      ...defaultFunctionProps,
-      ...props.defaultFunctionProps,
-    };
     const  {
       runtime,
       environment,
       handler,
       esbuildProps,
       ...restProps
-    } = defaultProps;
+    } = {
+      ...defaultFunctionProps,
+      ...props.defaultFunctionProps,
+    };
 
     if(!props.outputDirectory) { 
-      throw new Error(`'props.outputDirectory' is required when creating lambda functions.`)
+      throw new Error(`'props.outputDirectory' is required when creating lambda functions.`); 
     }
 
     const code = buildFunctionCode(functionOrEntryPoint, join(props.outputDirectory, functionPropKey));
@@ -84,7 +84,12 @@ export function createLambdaFunction(scope : Construct, props: AppsyncSchemaTran
       code,
       runtime,
       handler : `index.${handler}`,
-      ...restProps
+      ...restProps,
+      environment : {
+        ...environment,
+        MS_API_URL_OUTPUT_NAME : getGraphqlUrlOutputName(props), 
+        MS_API_KEY_SECRET_NAME : getSecretName(props)
+      }
     });
   } else {
     return functionOrEntryPoint;    

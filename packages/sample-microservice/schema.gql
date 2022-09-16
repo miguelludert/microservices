@@ -14,6 +14,16 @@ type TodoTask
     completedDate: AWSDateTime
     status: TodoStatusEnum!
     sharedWith : [SharedWith] @hasMany
+    image: Image @hasOne(fields : ["imageId"])
+    imageId: ID
+}
+
+type Image 
+    @auth(rules: [{ allow: public }])
+    @model
+{
+    id: ID!
+    url: String!
 }
 
 input TaskCompletedInput {
@@ -41,8 +51,8 @@ type Mutation {
         id: ID!
         emailAddress: String!
     ): Boolean
+        @aws_api_key
         @function(name: "share-task")
-        @auth(rules: [{ allow: public }])
 
    notifyTaskCompleted(input: TaskCompletedInput): SharedWith
 }

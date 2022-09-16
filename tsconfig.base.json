@@ -22,12 +22,16 @@
       "@miguelludert/appsync": [
         "packages/appsync/src/index.ts"
       ],
+      "@miguelludert/gql-client": [
+        "packages/gql-client/src/index.ts"
+      ],
       "@miguelludert/sample-microservice": [
         "packages/sample-microservice/src/index.ts"
       ]
     },
     "types": [
-      "node"
+      "node",
+      "jest"
     ]
   },
   "exclude": [

@@ -6,7 +6,7 @@ import { paramCase } from 'change-case';
 const app = new App();
 // core stack
 
-const namingConvention = (name : string) => paramCase(`Demo${name}`);
+const namingConvention = (name : string) => paramCase(`demo-${name}`);
 
 class AppsyncStack extends Stack
 {

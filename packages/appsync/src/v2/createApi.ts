@@ -5,9 +5,15 @@ import {
   AuthConfig,
   AuthType,
 } from '../datatypes/datatypes';
-import {Duration, Expiration } from 'aws-cdk-lib';
+import {Duration, Expiration, SecretValue } from 'aws-cdk-lib';
 import { tmpNameSync } from 'tmp';
 import { writeFileSync } from 'fs';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+import { cfnOutputs } from '../utils/cfn-outputs';
+
+
+export const getSecretName = (props : AppsyncSchemaTransformerProps) => props.namingConvention('api-key-secret-name');
+export const getGraphqlUrlOutputName = (props : AppsyncSchemaTransformerProps) => props.namingConvention('graphql-url');
 
 export const createApi = (
   scope: Construct,
@@ -29,8 +35,21 @@ export const createApi = (
     schema : aws_appsync.Schema.fromAsset(tempFileName)
   };
   const result = new aws_appsync.GraphqlApi(scope, name, apiProps);
+
+  if(props.authorizationConfig.some(s => s.authType === AuthType.ApiKey)) {
+    new Secret(scope, 'api-key-secret', {
+      secretName : getSecretName(props),
+      secretStringValue : new SecretValue(result.apiKey!)
+    });
+  }
+
+  cfnOutputs(scope, {
+    graphqlUrl: result.graphqlUrl,
+  }, props.namingConvention);
+
   return result;
 };
+
 
 export function getAuthorizationMode(
   config: AuthConfig
@@ -39,9 +58,9 @@ export function getAuthorizationMode(
     return {
       authorizationType: aws_appsync.AuthorizationType.API_KEY,
       apiKeyConfig : {
-		description : config.apiKeyConfig.description,
-		expires : Expiration.after(Duration.days(config.apiKeyConfig.expiresInDays)) 
-	  }
+        description : config.apiKeyConfig.description,
+        expires : Expiration.after(Duration.days(config.apiKeyConfig.expiresInDays)) 
+	    }
     };
   } else if (config.authType == AuthType.USER_POOL) {
     return {

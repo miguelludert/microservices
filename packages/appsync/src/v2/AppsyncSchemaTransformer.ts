@@ -127,6 +127,8 @@ export class AppsyncSchemaTransformer extends NestedStack {
     ]);
     this.addResources(createDynamoDataSource(this, this.props, this.api, this.cfn));
     this.addResources(createLambdaDataSource(this, this.props, this.api, this.cfn));
+
+    console.info(3);
     this.addResources(createFuntionConfigurations(this));
     this.addResources(createResolvers(this));
     this.addResources(props.subscriptions?.map((name) => createSubscription(this, name)));
@@ -136,9 +138,6 @@ export class AppsyncSchemaTransformer extends NestedStack {
     
     // TODO: refactor the rest of the add resource calls like this
     createRotator(this);
-    cfnOutputs(this, {
-      graphqlUrl: this.api.graphqlUrl,
-    }, props.namingConvention);
   }
 }
 
