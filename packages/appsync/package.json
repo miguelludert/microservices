@@ -2,5 +2,8 @@
   "name": "@miguelludert/appsync",
   "version": "0.0.0-alpha.13",
   "type": "commonjs",
-  "main": "dist/src/index.js"
+  "main": "dist/packages/appsync/src/index.js",
+  "scripts" : { 
+    "build" : "npx tsc -p tsconfig.lib.json --outDir dist"
+  }
 }

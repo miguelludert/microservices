@@ -22,7 +22,7 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "packages/appsync/dist",
+        "outputPath": "dist",
         "tsConfig": "packages/appsync/tsconfig.lib.json",
         "packageJson": "packages/appsync/package.json",
         "main": "packages/appsync/src/index.ts",
