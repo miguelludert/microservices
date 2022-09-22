@@ -94,11 +94,17 @@ export class AppsyncSchemaTransformer extends NestedStack {
 
     this.props = props;
     this.cfn = getCloudFormation(props);
+    console.info(-1);
     this.cfnResourcesByStackAndName = getCfnResourcesByStackAndName(this.cfn);
+    console.info(-2);
 
     props.baseName = name;
+    console.info(0);
     this.api = createApi(this, this.props, this.cfn);
+    console.info(0.5);
     this.noneDataSource = createNoneDataSource(this.api);
+
+    console.info(1);
     this.addResources([
       {
         type: AppsyncResourceType.GRAPHQL_API,
@@ -113,10 +119,15 @@ export class AppsyncSchemaTransformer extends NestedStack {
         construct: this.noneDataSource,
       },
     ]);
+    console.info(2);
     this.addResources(createDynamoDataSource(this, this.props, this.api, this.cfn));
+    console.info(3);
     this.addResources(createLambdaDataSource(this, this.props, this.api, this.cfn));
+    console.info(4);
     this.addResources(createFuntionConfigurations(this));
+    console.info(5);
     this.addResources(createResolvers(this));
+    console.info(6);
     this.addResources(props.subscriptions?.map((name) => createSubscription(this, name)));
     
     // add custom domain name

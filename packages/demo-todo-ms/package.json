@@ -1,0 +1,22 @@
+{
+    "name": "microservices",
+    "license": "MIT",
+    "scripts": {},
+    "private": true,
+    "type": "commonjs",
+    "engines": {
+        "node": ">=16",
+        "pnpm": ">=7"
+    },
+    "dependencies": {
+        "@miguelludert/appsync": "workspace:*",
+        "@miguelludert/ms-client": "workspace:*",
+        "aws-cdk-lib": "^2.41.0",
+        "change-case": "^4.1.2",
+        "constructs": "^10.1.107",
+        "ts-node": "^10.9.1"
+    },
+    "devDependencies": {
+        "tsconfig-paths": "^4.1.0"
+    }
+}

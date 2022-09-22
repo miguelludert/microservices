@@ -1,4 +1,4 @@
-* ~~publish to npm~~
+* publish to npm
 * subscriptions/websockets
 * autoId resolver
 * confirm that I can mix lambda functions and database models in the same pipeline
@@ -31,5 +31,6 @@ FRAMEWORK COMPLETE v1.0.0
 * docker datasources
 * custom lambda transformer
 * nx plugins
+* lambda aliases for blue green deployment
 
 NEXT GEN

@@ -62,10 +62,18 @@ export const transformSchema = (
       getObject : (value: string, defaultValue: any): any => defaultValue
     }
   });
+  console.info(12);
+  try
+  {
+    // ugly hack, get rid of this
+    const cfSchema = (gqlTransform.transform(schemaText) as any) as AmplifyGeneratedCfn;
+    console.info(13);
+    return cfSchema;
 
-  // ugly hack, get rid of this
-  const cfSchema = (gqlTransform.transform(schemaText) as any) as AmplifyGeneratedCfn;
-  return cfSchema;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 export function getAuthTransformerProps(
