@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig, Method } from 'axios';
 //import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { Fn } from 'aws-cdk-lib';
 import {
   SecretsManagerClient,
   DescribeSecretCommand,

@@ -1,4 +1,11 @@
 {
   "name": "@miguelludert/node-client",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.180.0",
+    "@aws-sdk/client-secrets-manager": "^3.180.0",
+    "axios": "^0.27.2"
+  }
 }
