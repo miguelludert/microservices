@@ -1,9 +1,30 @@
 {
   "name": "@miguelludert/appsync",
-  "version": "0.0.0-alpha.13",
+  "version": "0.0.0-alpha.16",
   "type": "commonjs",
   "main": "dist/packages/appsync/src/index.js",
-  "scripts" : { 
-    "build" : "npx tsc -p tsconfig.lib.json --outDir dist"
-  }
+  "scripts": {
+    "build": "npx tsc -p tsconfig.lib.json --outDir dist",
+    "build:dev": "npx tsc -p tsconfig.lib.json --outDir dist --watch"
+  },
+  "dependencies": {
+    "@aws-amplify/graphql-auth-transformer": "^1.0.3",
+    "@aws-amplify/graphql-function-transformer": "^0.7.28",
+    "@aws-amplify/graphql-index-transformer": "^0.13.7",
+    "@aws-amplify/graphql-model-transformer": "^0.15.7",
+    "@aws-amplify/graphql-relational-transformer": "^0.11.8",
+    "@aws-amplify/graphql-transformer-core": "^0.17.12",
+    "@aws-cdk/aws-appsync-alpha": "^2.41.0-alpha.0",
+    "@aws-sdk/client-cloudformation": "^3.171.0",
+    "@aws-sdk/client-secrets-manager": "^3.171.0",
+    "@types/node": "^18.7.23",
+    "amplify-cli-core": "^3.2.0",
+    "amplify-prompts": "^2.5.0",
+    "aws-cdk-lib": "^2.43.1",
+    "change-case": "^4.1.2",
+    "constructs": "^10.1.114",
+    "esbuild": "^0.15.9",
+    "tmp": "^0.2.1"
+  },
+  "peerDependencies": {}
 }

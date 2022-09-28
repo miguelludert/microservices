@@ -19,7 +19,7 @@
        {
         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
        },
-       "/08c2097d3f9096283806ca6295b387b42627a31b383547ed9c0b7239a9f16ab3.json"
+       "/affee607194fa947edbbfc3b70cc1f3f3c87ff44cc1d5b7a4a4ef4be4d0e6ca9.json"
       ]
      ]
     }
@@ -35,7 +35,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzHUM1BMLC/WTU7J1s3JTNKrDi5JTM7WcU7LgzOCUovzS4uSU0Fs5/y8lMySzPy8Wp28/JRUvaxi/TJDEz1Dc6AxWcWZmbpFpXklmbmpekEQGgBihYEIYgAAAA=="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzHWM1RMLC/WTU7J1s3JTNKrDi5JTM7WcU7LgzOCUovzS4uSU0Fs5/y8lMySzPy8Wp28/JRUvaxi/TJDMz1Dcz0DxazizEzdotK8kszcVL0gCA0AoaqTSGIAAAA="
    },
    "Metadata": {
     "aws:cdk:path": "demo-stack/CDKMetadata/Default"

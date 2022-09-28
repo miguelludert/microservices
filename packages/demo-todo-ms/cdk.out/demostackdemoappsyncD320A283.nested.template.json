@@ -35,7 +35,7 @@
      ]
     },
     "Description": "Default API key.",
-    "Expires": 1694884823
+    "Expires": 1695867160
    },
    "DependsOn": [
     "demographqlapiSchemaD6A25D50"
@@ -2437,7 +2437,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/01Qy27CMBD8Fu6OgRap10JReyiiLekdbewlGBw79YMKWfn32g6hOe3OPkYz80AXcxpmE/i1BePnQoqKhi1ah7x0wM4kLvYB2tZeFaPh5aDeDLTHr82yFeQfleyIDaRBnL/jNXVrcFBqbxgm9OoVc0KrF60OovYGEkiLHVotL2g6IqChYadlvs/1U0vBMlnfdcQiM+hsAwpqNDSUGaeLvusIvypoNI82vqHquXLTEQlNxYGGQcpYVmR+3IO1kZsuU4mYrjw7o1uBjc9J5uDlw7vWO5LvYkq1UPXgZDiJNrnoiWcFyPYIdDZ5vqU8TfWW6W0ZcpA/MsW61QpH4a2zoXU1Gm2yk9Fg2ZPdnd1D7YjSHOnJTi/zBZ0/RRUnK0RhvHKiQbrr6x9YropIBwIAAA=="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/01Qy27CMBD8lt6dhRTUXstD7aGItqR3tLFNMDh2ajtUyMq/13YIzWl39jGamUfw8xnkD/hrM8rOmRQl+C23jrPCIT2TsNh7bBp7VRT86qDeDDbHr82iEeQfFfTIa4yDMH/n19it0WGhW0N5RK+tok5otdLqIKrWYARxseNWyws3HRFYg99pme5T/dRS0ETWdx2xnBrubI0KK27AFwnHi77rCLsqrDULNr6x7LlS0xGJdckQ/CBlLCswz/ZobeCGRSwBw7KlZ+6WaMNzlDl4+Whd0zqS7kJKlVDV4GQ4CTaZ6InnOUwzlM0RYfrwcgt6Eust1tvSpyx/ZEx2qxUf5bdOntblaLRJZkaDRU92N3fPtSNKMw4nO7nkT5A/BxUnK0RmWuVEzWHX1z+OqAXqCgIAAA=="
    },
    "Metadata": {
     "aws:cdk:path": "demo-stack/demo-appsync/CDKMetadata/Default"

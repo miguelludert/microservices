@@ -1,0 +1,11 @@
+{
+  "name": "demo-todo-ms",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "aws-cdk-lib": "^2.43.1",
+    "constructs": "^10.1.114"
+  }
+}
