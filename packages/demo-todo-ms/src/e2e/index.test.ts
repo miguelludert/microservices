@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { appsyncClient } from '@miguelludert/ms-client';
+import { appsyncClient } from '@miguelludert/node-client';
 import exp = require('constants');
 import { randomUUID } from 'crypto';
 // import * as dotenv from 'dotenv';

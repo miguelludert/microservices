@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'demo-todo-ms',
-  preset: '../../jest.preset.js',
+  //preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
